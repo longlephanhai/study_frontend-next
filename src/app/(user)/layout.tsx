@@ -10,14 +10,11 @@ const { Content } = Layout;
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      {/* Header */}
       <Header />
-
-      {/* Content chính */}
       <Content
         style={{
           padding: '24px 48px',
-          backgroundColor: '#ffffff', 
+          backgroundColor: '#ffffff',
           flex: 1,
         }}
       >
@@ -25,8 +22,6 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
           {children}
         </div>
       </Content>
-
-      {/* Footer */}
       <Footer />
     </Layout>
   );
