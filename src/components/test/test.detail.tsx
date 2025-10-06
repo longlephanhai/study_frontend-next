@@ -18,6 +18,7 @@ import {
   FileTextOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons'
+import { useRouter } from 'next/navigation'
 
 const { Title, Text } = Typography
 
@@ -26,6 +27,9 @@ interface IProps {
 }
 
 const TestDetailComponent = ({ test }: IProps) => {
+
+  const router = useRouter()
+
   const [selectedParts, setSelectedParts] = useState<string[]>([])
 
   const handleSelectPart = (partId: string, checked: boolean) => {
@@ -40,10 +44,12 @@ const TestDetailComponent = ({ test }: IProps) => {
       return
     }
     message.success(`Bắt đầu làm ${selectedParts.length} phần đã chọn!`)
+    router.push(`exam?parts=${selectedParts.join(',')}`)
   }
 
   const handleStartAll = () => {
     message.success('Bắt đầu làm toàn bộ bài thi!')
+    router.push(`exam`)
   }
 
   return (
@@ -126,9 +132,10 @@ const TestDetailComponent = ({ test }: IProps) => {
                   type="primary"
                   ghost
                   shape="round"
-                  onClick={() =>
+                  onClick={() => {
                     message.info(`Bắt đầu làm phần "${part.name}"`)
-                  }
+                    router.push(`exam`)
+                  }}
                 >
                   Làm phần này
                 </Button>
