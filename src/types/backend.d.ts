@@ -104,5 +104,16 @@ declare global {
     content: string;
     feedback: WritingFeedback;
   }
+
+  interface ITest {
+    _id: string;
+    title: string;
+    description: string;
+    durationSec: number;
+    isPublic: boolean;
+    totalQuestions: number;
+    parts: IPart[];
+    audioUrl: string;
+  }
 }
 

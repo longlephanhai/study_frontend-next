@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import WritingHistoryPageComponent from "@/components/writing/writing.history";
 import { sendRequest } from "@/utils/api";
+import { Empty } from "antd";
 
 
 export default async function WritingHistoryPage() {
@@ -20,6 +21,14 @@ export default async function WritingHistoryPage() {
 
   const writingHistories = res.data ?? [];
   return (
-    <WritingHistoryPageComponent writingHistories={writingHistories} />
+    <>
+      {
+        writingHistories.length > 0 ? (
+          <WritingHistoryPageComponent writingHistories={writingHistories} />
+        ) : (
+          <Empty description="No writing history found." />
+        )
+      }
+    </>
   );
 }

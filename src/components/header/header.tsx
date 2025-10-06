@@ -37,7 +37,7 @@ export default function Header() {
   const menuItems = [
     { key: "home", label: "Trang chủ", icon: <HomeOutlined /> },
     { key: "courses", label: "Khóa học", icon: <BookOutlined /> },
-    { key: "test", label: "Đề thi", icon: <FormOutlined /> },
+    { key: "test", label: "Đề thi", icon: <FormOutlined />, onClick: () => router.push('/test') },
     { key: "writing", label: "Luyện viết", icon: <ReadOutlined />, onClick: () => router.push('/writing') },
     { key: "library", label: "Thư viện", icon: <ReadOutlined /> },
   ];
