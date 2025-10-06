@@ -115,5 +115,29 @@ declare global {
     parts: IPart[];
     audioUrl: string;
   }
+
+  interface IPart {
+    _id: string;
+    partNo: number;
+    name: string;
+    durationSec: number;
+    orderIndex: number;
+    description: string;
+    questions: IQuestion[];
+  }
+
+  interface IQuestion {
+    _id: string;
+    numberQuestion: number;
+    questionContent?: string;
+    options: string[];
+    correctAnswer: string;
+    imageUrl?: string;
+    audioUrl?: string;
+    explanation?: string;
+    category?: string;
+    transcript?: string;
+    reading?: string[];
+  }
 }
 

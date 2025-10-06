@@ -86,19 +86,6 @@ const TestList = ({ tests }: IProps) => {
                   <QuestionCircleOutlined style={{ color: "#faad14" }} />
                   <Text>{test.totalQuestions} câu</Text>
                 </Space>
-                {test.audioUrl && (
-                  <Space>
-                    <SoundOutlined style={{ color: "#eb2f96" }} />
-                    <a
-                      href={test.audioUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ color: "#eb2f96" }}
-                    >
-                      Nghe audio
-                    </a>
-                  </Space>
-                )}
               </Space>
 
               {test.parts.length > 0 && (

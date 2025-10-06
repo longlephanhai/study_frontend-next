@@ -16,9 +16,6 @@ export default async function WritingDetailPage({ params }: { params: { id: stri
     }
   })
 
-
-
-
   return (
     <>
       <WritingTextarea writing={res?.data ?? null} />
