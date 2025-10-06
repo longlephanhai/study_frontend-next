@@ -85,6 +85,9 @@ export default function WritingTextarea({ writing }: IProps) {
           },
           headers: {
             Authorization: `Bearer ${session?.access_token}`
+          },
+          nextOption: {
+            next: { tags: ['fetch-writing-history'] }
           }
         })
       }

@@ -24,6 +24,7 @@ import {
   LogoutOutlined,
   SettingOutlined,
   FormOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 import { useRouter } from 'next/navigation';
 
@@ -45,6 +46,7 @@ export default function Header() {
     <Menu
       items={[
         { key: "profile", label: "Hồ sơ", icon: <UserOutlined /> },
+        { key: "writing-history", label: "Lịch sử bài viết", icon: <HistoryOutlined />, onClick: () => router.push('/writing/history') },
         { key: "settings", label: "Cài đặt", icon: <SettingOutlined /> },
         { type: "divider" },
         { key: "logout", label: "Đăng xuất", icon: <LogoutOutlined /> },

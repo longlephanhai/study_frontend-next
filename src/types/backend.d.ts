@@ -92,5 +92,17 @@ declare global {
     };
     improvedVersion?: string;
   }
+
+  interface IWritingHistory {
+    _id: string;
+    userId: string;
+    writingId: {
+      _id: string;
+      topic: string;
+      title: string;
+    };
+    content: string;
+    feedback: WritingFeedback;
+  }
 }
 
