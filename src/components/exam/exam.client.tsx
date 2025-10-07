@@ -6,6 +6,7 @@ import Part1Component from "@/components/exam/exam.part1";
 import Part2Component from "@/components/exam/exam.part2";
 import Part3Component from "./exam.part3";
 import Part4Component from "./exam.part4";
+import Part5Component from "./exam.part5";
 
 interface IProps {
   partsData: IPart[]
@@ -98,6 +99,14 @@ export default function ExamPageClient({ partsData }: IProps) {
 
       {currentPart.partNo === 4 && (
         <Part4Component
+          part={currentPart}
+          onAnswerChange={handleAnswerChange}
+          answers={allAnswers}
+          questionRefs={questionRefs}
+        />
+      )}
+      {currentPart.partNo === 5 && (
+        <Part5Component
           part={currentPart}
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
