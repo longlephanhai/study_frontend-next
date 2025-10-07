@@ -59,7 +59,7 @@ const Part2Component = ({ part, answers = {}, onAnswerChange, questionRefs }: IP
               style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}
             >
               {q.options.map((opt, i) => (
-                <Radio key={i} value={opt}>{opt}</Radio>
+                <Radio key={i} value={opt} />
               ))}
             </Radio.Group>
 
