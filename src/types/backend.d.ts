@@ -158,6 +158,7 @@ declare global {
   }
 
   interface IExamResult {
+    _id: string;
     testId: string;
     totalCorrect: number;
     totalListeningCorrect: number;

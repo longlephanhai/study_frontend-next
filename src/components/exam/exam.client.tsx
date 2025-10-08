@@ -72,19 +72,19 @@ export default function ExamPageClient({ partsData }: IProps) {
   }
 
   const handleSubmitAll = async () => {
-    let wrongAnswer: Record<string, number> = {};
-    let correctAnswer: Record<string, number> = {};
-    let noAnswer: Record<string, number> = {};
+    let wrongAnswer: string[] = [];
+    let correctAnswer: string[] = [];
+    let noAnswer: string[] = [];
     let totalReadingCorrect = 0;
     let totalListeningCorrect = 0;
     partsData.forEach(part => {
       part.questions.forEach(q => {
         const userAns = allAnswers[q._id];
         if (!userAns) {
-          noAnswer[q._id] = q.numberQuestion;
+          noAnswer.push(q._id);
         }
         else if (userAns === listCorrectAnswers[q._id]) {
-          correctAnswer[q._id] = q.numberQuestion;
+          correctAnswer.push(q._id);
           if (part.partNo >= 1 && part.partNo <= 4) {
             totalListeningCorrect++;
           } else {
@@ -92,7 +92,7 @@ export default function ExamPageClient({ partsData }: IProps) {
           }
         }
         else {
-          wrongAnswer[q._id] = q.numberQuestion;
+          wrongAnswer.push(q._id);
         }
       })
     })
@@ -105,6 +105,8 @@ export default function ExamPageClient({ partsData }: IProps) {
         answer: allAnswers[q._id] || null
       }))
     }));
+
+    console.log({ totalCorrect, totalListeningCorrect, totalReadingCorrect, correctAnswer, wrongAnswer, noAnswer, parts });
 
 
     const data = {
@@ -131,7 +133,7 @@ export default function ExamPageClient({ partsData }: IProps) {
     })
     if (res && res.data) {
       message.success('Nộp bài thành công!');
-      router.push(`/test/${testId}/exam/result`);
+      router.push(`/test/${testId}/exam/result/${res.data._id}`);
     }
   }
 
