@@ -38,7 +38,6 @@ const Part6Component = ({ part, answers = {}, onAnswerChange, questionRefs }: IP
     onAnswerChange?.(questionId, value);
   };
 
-  // 👉 Nhóm 4 câu chung 1 đoạn (mỗi đoạn có 4 câu)
   const groupedQuestions = useMemo(() => {
     const groups = [];
     for (let i = 0; i < part.questions.length; i += 4) {

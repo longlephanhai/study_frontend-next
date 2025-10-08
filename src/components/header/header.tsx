@@ -25,6 +25,7 @@ import {
   SettingOutlined,
   FormOutlined,
   HistoryOutlined,
+  NotificationOutlined,
 } from "@ant-design/icons";
 import { useRouter } from 'next/navigation';
 
@@ -39,6 +40,7 @@ export default function Header() {
     { key: "courses", label: "Khóa học", icon: <BookOutlined /> },
     { key: "test", label: "Đề thi", icon: <FormOutlined />, onClick: () => router.push('/test') },
     { key: "writing", label: "Luyện viết", icon: <ReadOutlined />, onClick: () => router.push('/writing') },
+    { key: "speaking", label: "Luyện nói", icon: <NotificationOutlined />, onClick: () => router.push('/speaking') },
     { key: "library", label: "Thư viện", icon: <ReadOutlined /> },
   ];
 
