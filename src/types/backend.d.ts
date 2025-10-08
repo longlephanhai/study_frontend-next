@@ -168,5 +168,19 @@ declare global {
     wrongAnswer: Record<string, number>;
     noAnswer: Record<string, number>;
   }
+
+  interface PartMistakeSummary {
+    [category: string]: number;
+  }
+
+  interface IMistake {
+    part1: PartMistakeSummary;
+    part2: PartMistakeSummary;
+    part3: PartMistakeSummary;
+    part4: PartMistakeSummary;
+    part5: PartMistakeSummary;
+    part6: PartMistakeSummary;
+    part7: PartMistakeSummary;
+  }
 }
 
