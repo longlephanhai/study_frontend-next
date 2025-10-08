@@ -1,19 +1,20 @@
 'use client'
 
 import { RefObject, useState } from 'react';
-import { Card, Radio, Space, Collapse, Typography } from 'antd';
+import { Card, Radio, Space, Statistic, Typography } from 'antd';
 
 const { Title } = Typography;
-const { Panel } = Collapse;
+const { Timer } = Statistic;
 
 interface IProps {
   part: IPart,
   answers?: Record<string, string>,
   onAnswerChange?: (questionId: string, value: string) => void,
-  questionRefs?: RefObject<Record<string, HTMLDivElement | null>>
+  questionRefs?: RefObject<Record<string, HTMLDivElement | null>>,
+  durationSec?: number
 }
 
-const Part2Component = ({ part, answers = {}, onAnswerChange, questionRefs }: IProps) => {
+const Part2Component = ({ part, answers = {}, onAnswerChange, questionRefs, durationSec }: IProps) => {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(answers);
 
   const handleSelect = (questionId: string, value: string) => {
@@ -59,7 +60,9 @@ const Part2Component = ({ part, answers = {}, onAnswerChange, questionRefs }: IP
               style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}
             >
               {q.options.map((opt, i) => (
-                <Radio key={i} value={opt} />
+                <Radio key={i} value={String.fromCharCode(65 + i)}>
+                  {`${String.fromCharCode(65 + i)}`}
+                </Radio>
               ))}
             </Radio.Group>
 

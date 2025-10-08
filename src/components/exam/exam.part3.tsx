@@ -10,9 +10,10 @@ interface IProps {
   answers?: Record<string, string>;
   onAnswerChange?: (questionId: string, value: string) => void;
   questionRefs?: RefObject<Record<string, HTMLDivElement | null>>;
+  durationSec?: number;
 }
 
-const Part3Component = ({ part, answers = {}, onAnswerChange, questionRefs }: IProps) => {
+const Part3Component = ({ part, answers = {}, onAnswerChange, questionRefs, durationSec }: IProps) => {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(answers);
 
   const handleSelect = (questionId: string, value: string) => {

@@ -26,6 +26,7 @@ export default async function ExamPage(props: IProps) {
   })
 
   const partsData = res.data ?? [];
+
   return (
     <ExamPageClient partsData={partsData} />
   )

@@ -156,5 +156,16 @@ declare global {
     pronounce: string;
     img: string;
   }
+
+  interface IExamResult {
+    testId: string;
+    totalCorrect: number;
+    totalListeningCorrect: number;
+    totalReadingCorrect: number;
+    parts: IPart[];
+    correctAnswer: Record<string, number>;
+    wrongAnswer: Record<string, number>;
+    noAnswer: Record<string, number>;
+  }
 }
 

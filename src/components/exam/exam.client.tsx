@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef } from "react";
-import { Button, Space, Tag, message } from "antd";
+import { useState, useRef, useEffect } from "react";
+import { Button, Space, Tag, message, Statistic } from "antd";
 import Part1Component from "@/components/exam/exam.part1";
 import Part2Component from "@/components/exam/exam.part2";
 import Part3Component from "./exam.part3";
@@ -9,16 +9,43 @@ import Part4Component from "./exam.part4";
 import Part5Component from "./exam.part5";
 import Part6Component from "./exam.part6";
 import Part7Component from "./exam.part7";
+import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { sendRequest } from "@/utils/api";
 
 
+const { Timer } = Statistic;
 interface IProps {
   partsData: IPart[]
 }
 
 export default function ExamPageClient({ partsData }: IProps) {
+  const params = useParams();
+  const testId = params.id;
+
+  const { data: session } = useSession();
+
+  const router = useRouter();
+
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [listCorrectAnswers, setListCorrectAnswers] = useState<Record<string, string>>({});
   const [allAnswers, setAllAnswers] = useState<Record<string, string>>({});
-  const questionRefs = useRef<Record<string, HTMLDivElement | null>>({}); // ref cho từng câu hỏi
+  const questionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const [durationSec, setDurationSec] = useState(0);
+  const [deadline, setDeadline] = useState(Date.now() + durationSec * 1000);
+
+
+  useEffect(() => {
+    const corrects: Record<string, string> = {};
+    partsData.forEach(part => {
+      part.questions.forEach(q => {
+        corrects[q._id] = q.correctAnswer;
+      })
+    })
+    setListCorrectAnswers(corrects);
+  }, []);
+
 
   if (partsData.length === 0) return <p>Không có dữ liệu phần nào.</p>;
 
@@ -44,9 +71,82 @@ export default function ExamPageClient({ partsData }: IProps) {
     }
   }
 
+  const handleSubmitAll = async () => {
+    let wrongAnswer: Record<string, number> = {};
+    let correctAnswer: Record<string, number> = {};
+    let noAnswer: Record<string, number> = {};
+    let totalReadingCorrect = 0;
+    let totalListeningCorrect = 0;
+    partsData.forEach(part => {
+      part.questions.forEach(q => {
+        const userAns = allAnswers[q._id];
+        if (!userAns) {
+          noAnswer[q._id] = q.numberQuestion;
+        }
+        else if (userAns === listCorrectAnswers[q._id]) {
+          correctAnswer[q._id] = q.numberQuestion;
+          if (part.partNo >= 1 && part.partNo <= 4) {
+            totalListeningCorrect++;
+          } else {
+            totalReadingCorrect++;
+          }
+        }
+        else {
+          wrongAnswer[q._id] = q.numberQuestion;
+        }
+      })
+    })
+    const totalCorrect = totalListeningCorrect + totalReadingCorrect;
+    const parts = partsData.map(part => ({
+      partId: part._id,
+      partNo: part.partNo,
+      answers: part.questions.map(q => ({
+        questionId: q._id,
+        answer: allAnswers[q._id] || null
+      }))
+    }));
+
+
+    const data = {
+      testId,
+      totalCorrect,
+      totalListeningCorrect,
+      totalReadingCorrect,
+      parts,
+      correctAnswer,
+      wrongAnswer,
+      noAnswer
+    }
+
+    const res = await sendRequest<IBackendRes<IExamResult>>({
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/exam-result`,
+      method: "POST",
+      body: data,
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      nextOption: {
+        next: { tags: ['fetch-exam-result'] }
+      }
+    })
+    if (res && res.data) {
+      message.success('Nộp bài thành công!');
+      router.push(`/test/${testId}/exam/result`);
+    }
+  }
+
+  useEffect(() => {
+    const totalDuration = partsData.reduce((sum, part) => sum + part.durationSec, 0);
+    setDurationSec(totalDuration);
+    setDeadline(Date.now() + totalDuration * 1000);
+  }, []);
+
+
   return (
     <div style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
-      <Space wrap style={{ marginBottom: 20 }}>
+      <Space wrap style={{
+        marginBottom: 20,
+      }}>
         {partsData.map((part, index) => (
           <Button
             key={part._id}
@@ -56,9 +156,18 @@ export default function ExamPageClient({ partsData }: IProps) {
             Part {part.partNo}
           </Button>
         ))}
+        <Tag style={{ fontSize: 16, height: 'auto' }}>
+          <Timer
+            value={deadline}
+            type="countdown"
+            onFinish={() => {
+              message.warning('Hết giờ làm bài!');
+              handleSubmitAll();
+            }}
+          />
+        </Tag>
       </Space>
 
-      {/* Question Tracker */}
       <div style={{ marginBottom: 20 }}>
         <Space wrap>
           {currentPart.questions.map(q => (
@@ -74,13 +183,13 @@ export default function ExamPageClient({ partsData }: IProps) {
         </Space>
       </div>
 
-      {/* Part Component */}
       {currentPart.partNo === 1 && (
         <Part1Component
           part={currentPart}
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
           questionRefs={questionRefs}
+          durationSec={currentPart.durationSec}
         />
       )}
       {currentPart.partNo === 2 && (
@@ -89,6 +198,7 @@ export default function ExamPageClient({ partsData }: IProps) {
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
           questionRefs={questionRefs}
+          durationSec={currentPart.durationSec}
         />
       )}
       {currentPart.partNo === 3 && (
@@ -97,6 +207,7 @@ export default function ExamPageClient({ partsData }: IProps) {
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
           questionRefs={questionRefs}
+          durationSec={currentPart.durationSec}
         />
       )}
 
@@ -106,6 +217,7 @@ export default function ExamPageClient({ partsData }: IProps) {
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
           questionRefs={questionRefs}
+          durationSec={currentPart.durationSec}
         />
       )}
       {currentPart.partNo === 5 && (
@@ -114,6 +226,7 @@ export default function ExamPageClient({ partsData }: IProps) {
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
           questionRefs={questionRefs}
+          durationSec={currentPart.durationSec}
         />
       )}
       {currentPart.partNo === 6 && (
@@ -122,6 +235,7 @@ export default function ExamPageClient({ partsData }: IProps) {
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
           questionRefs={questionRefs}
+          durationSec={currentPart.durationSec}
         />
       )}
       {currentPart.partNo === 7 && (
@@ -130,17 +244,18 @@ export default function ExamPageClient({ partsData }: IProps) {
           onAnswerChange={handleAnswerChange}
           answers={allAnswers}
           questionRefs={questionRefs}
+          durationSec={currentPart.durationSec}
         />
       )}
 
-      {/* Navigation & Submit */}
+
       <div style={{ marginTop: 20 }}>
         <Button onClick={goPrev} disabled={currentIndex === 0}>Previous</Button>
         <Button onClick={goNext} disabled={currentIndex === partsData.length - 1} style={{ marginLeft: 10 }}>Next</Button>
         <Button
           type="primary"
           style={{ marginLeft: 10 }}
-          onClick={() => message.success('Đã nộp đáp án!')}
+          onClick={handleSubmitAll}
         >
           Nộp tất cả
         </Button>

@@ -8,9 +8,10 @@ interface IProps {
   answers?: Record<string, string>;
   onAnswerChange?: (questionId: string, value: string) => void;
   questionRefs?: RefObject<Record<string, HTMLDivElement | null>>;
+  durationSec?: number;
 }
 
-const Part4Component = ({ part, answers = {}, onAnswerChange, questionRefs }: IProps) => {
+const Part4Component = ({ part, answers = {}, onAnswerChange, questionRefs, durationSec }: IProps) => {
   // Nhóm các câu hỏi theo audioUrl
   const groupedQuestions = Object.values(
     part.questions.reduce((acc: Record<string, IQuestion[]>, q) => {

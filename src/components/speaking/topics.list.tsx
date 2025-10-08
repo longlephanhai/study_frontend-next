@@ -70,7 +70,7 @@ const TopicsVocabularyList = ({ topics }: IProps) => {
           color: 'transparent',
         }}
       >
-        Writing Topics
+        Speaking Topics
       </Title>
 
       <Row gutter={[20, 20]}>

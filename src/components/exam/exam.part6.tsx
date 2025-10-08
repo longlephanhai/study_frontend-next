@@ -5,32 +5,19 @@ import { Card, Radio, Typography, Divider } from 'antd';
 
 const { Title, Paragraph, Text } = Typography;
 
-interface IQuestion {
-  _id: string;
-  numberQuestion: number;
-  questionContent?: string;
-  questionText?: string;
-  options: string[];
-}
-
-interface IPart {
-  name: string;
-  description: string;
-  questions: IQuestion[];
-}
-
 interface IProps {
   part: IPart;
   answers?: Record<string, string>;
   onAnswerChange?: (questionId: string, value: string) => void;
   questionRefs?: RefObject<Record<string, HTMLDivElement | null>>;
+  durationSec?: number;
 }
 
 const highlightBlanks = (text: string) => {
   return text.replace(/_{3,}|\(\d+\)/g, match => `<b style="color:#1677ff">${match}</b>`);
 };
 
-const Part6Component = ({ part, answers = {}, onAnswerChange, questionRefs }: IProps) => {
+const Part6Component = ({ part, answers = {}, onAnswerChange, questionRefs, durationSec }: IProps) => {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(answers);
 
   const handleSelect = (questionId: string, value: string) => {

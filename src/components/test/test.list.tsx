@@ -12,7 +12,7 @@ const { Title, Text } = Typography
 
 
 interface IProps {
-  tests: ITest[]
+  tests: ITest[],
 }
 
 const TestList = ({ tests }: IProps) => {

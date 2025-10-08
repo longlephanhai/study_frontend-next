@@ -44,12 +44,13 @@ const TestDetailComponent = ({ test }: IProps) => {
       return
     }
     message.success(`Bắt đầu làm ${selectedParts.length} phần đã chọn!`)
-    router.push(`exam?parts=${selectedParts.join(',')}`)
+    router.push(`${test._id}/exam?parts=${selectedParts.join(',')}`)
   }
 
   const handleStartAll = () => {
     message.success('Bắt đầu làm toàn bộ bài thi!')
-    router.push(`exam`)
+    const allPartIds = test.parts.map((part) => part._id)
+    router.push(`${test._id}/exam?parts=${allPartIds.join(',')}`)
   }
 
   return (
@@ -133,8 +134,8 @@ const TestDetailComponent = ({ test }: IProps) => {
                   ghost
                   shape="round"
                   onClick={() => {
-                    message.info(`Bắt đầu làm phần "${part.name}"`)
-                    router.push(`exam`)
+                    message.success(`Bắt đầu làm phần "${part.name}"`)
+                    router.push(`${test._id}/exam?parts=${part._id}`)
                   }}
                 >
                   Làm phần này
