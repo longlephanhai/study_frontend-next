@@ -64,9 +64,9 @@ const ExamResultDetail = ({ result }: IProps) => {
           <Text strong>Tổng số câu đọc đúng: </Text>
           <Text>{result?.totalReadingCorrect}</Text> |{' '}
           <Text strong>Tổng điểm phần đọc: </Text>
-          <Text>{result?.totalReadingScore}</Text> |{' '}
+          <Text>{result?.readingScore}</Text> |{' '}
           <Text strong>Tổng điểm phần nghe: </Text>
-          <Text>{result?.totalListeningScore}</Text> |{' '}
+          <Text>{result?.listeningScore}</Text> |{' '}
           <Text strong>Tổng điểm: </Text>
           <Text>{result?.totalScore}</Text>
         </Card>

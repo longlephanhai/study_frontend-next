@@ -167,6 +167,10 @@ declare global {
     correctAnswer: Record<string, number>;
     wrongAnswer: Record<string, number>;
     noAnswer: Record<string, number>;
+    totalScore: number;
+    readingScore: number;
+    listeningScore: number;
+    createdAt: string;
   }
 
   interface PartMistakeSummary {
