@@ -12,8 +12,8 @@ interface IProps {
   topics: ITopicVocabulary[];
 }
 
-const TopicsList: React.FC<IProps> = ({ topics }) => {
-
+const TopicsList = (props: IProps) => {
+  const { topics } = props;
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
