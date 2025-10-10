@@ -145,6 +145,7 @@ declare global {
     topic: string;
     description: string;
     vocabularies?: IVocabulary[];
+    updatedAt: string;
   }
 
   interface IVocabulary {

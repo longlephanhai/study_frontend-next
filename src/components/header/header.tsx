@@ -43,7 +43,7 @@ export default function Header() {
     { key: "writing", label: "Luyện viết", icon: <ReadOutlined />, onClick: () => router.push('/writing') },
     { key: "speaking", label: "Luyện nói", icon: <NotificationOutlined />, onClick: () => router.push('/speaking') },
     { key: "mistake", label: "Ôn tập lỗi sai", icon: <BugOutlined />, onClick: () => router.push('/mistake') },
-    { key: "library", label: "Thư viện", icon: <ReadOutlined /> },
+    { key: "vocabularies", label: "Từ vựng", icon: <ReadOutlined />, onClick: () => router.push('/vocabularies') },
   ];
 
   const userMenu = (
