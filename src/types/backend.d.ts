@@ -187,5 +187,11 @@ declare global {
     part6: PartMistakeSummary;
     part7: PartMistakeSummary;
   }
+
+  interface IGrammar{
+    _id: string;
+    title: string;
+    content: string;
+  }
 }
 

@@ -14,7 +14,6 @@ import {
 } from "antd";
 import {
   HomeOutlined,
-  BookOutlined,
   ReadOutlined,
   SearchOutlined,
   BellOutlined,
@@ -27,23 +26,26 @@ import {
   HistoryOutlined,
   NotificationOutlined,
   BugOutlined,
+  FileWordOutlined,
 } from "@ant-design/icons";
 import { useRouter } from 'next/navigation';
+import { on } from "events";
 
 const { Header: AntHeader } = Layout;
 const { Search } = Input;
 
 export default function Header() {
+  ``
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
   const menuItems = [
     { key: "home", label: "Trang chủ", icon: <HomeOutlined /> },
-    { key: "courses", label: "Khóa học", icon: <BookOutlined /> },
     { key: "test", label: "Đề thi", icon: <FormOutlined />, onClick: () => router.push('/test') },
     { key: "writing", label: "Luyện viết", icon: <ReadOutlined />, onClick: () => router.push('/writing') },
     { key: "speaking", label: "Luyện nói", icon: <NotificationOutlined />, onClick: () => router.push('/speaking') },
     { key: "mistake", label: "Ôn tập lỗi sai", icon: <BugOutlined />, onClick: () => router.push('/mistake') },
     { key: "vocabularies", label: "Từ vựng", icon: <ReadOutlined />, onClick: () => router.push('/vocabularies') },
+    { key: "grammar", label: "Ngữ pháp", icon: <FileWordOutlined />, onClick: () => router.push('/grammar') },
   ];
 
   const userMenu = (
