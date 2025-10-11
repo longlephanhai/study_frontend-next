@@ -193,5 +193,6 @@ declare global {
     title: string;
     content: string;
   }
+
 }
 

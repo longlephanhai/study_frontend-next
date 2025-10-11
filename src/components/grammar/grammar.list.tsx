@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Card, Row, Col, Typography, Button, Modal, Empty, Pagination } from 'antd';
+import { useRouter } from 'next/navigation';
 
 
 const { Title, Text } = Typography;
@@ -10,9 +11,12 @@ interface IProps {
   grammars: IGrammar[];
 }
 
-const PAGE_SIZE = 9; // số bài trên mỗi trang
+const PAGE_SIZE = 9;
 
 const GrammarList: React.FC<IProps> = ({ grammars }) => {
+
+  const router = useRouter()
+
   const [selectedGrammar, setSelectedGrammar] = useState<IGrammar | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -20,7 +24,7 @@ const GrammarList: React.FC<IProps> = ({ grammars }) => {
     return <Empty description="Không có ngữ pháp nào" style={{ marginTop: 50 }} />;
   }
 
-  // tính toán phân trang
+
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentData = grammars.slice(startIndex, startIndex + PAGE_SIZE);
 
@@ -107,10 +111,7 @@ const GrammarList: React.FC<IProps> = ({ grammars }) => {
                 type="primary"
                 size="large"
                 onClick={() => {
-                  // 👉 Tùy bạn: có thể navigate đến trang luyện tập AI
-                  // Ví dụ nếu dùng Next.js router:
-                  // router.push(`/ai/grammar/${selectedGrammar._id}`);
-                  console.log('Bắt đầu ôn luyện với AI cho:', selectedGrammar.title);
+                  router.push(`/grammar/${selectedGrammar._id}`);
                 }}
               >
                 💬 Ôn luyện với AI
