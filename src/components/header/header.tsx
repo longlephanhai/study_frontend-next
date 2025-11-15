@@ -39,7 +39,7 @@ export default function Header() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
   const menuItems = [
-    { key: "home", label: "Trang chủ", icon: <HomeOutlined /> },
+    { key: "home", label: "Trang chủ", icon: <HomeOutlined />, onClick: () => router.push('/') },
     { key: "test", label: "Đề thi", icon: <FormOutlined />, onClick: () => router.push('/test') },
     { key: "writing", label: "Luyện viết", icon: <ReadOutlined />, onClick: () => router.push('/writing') },
     { key: "speaking", label: "Luyện nói", icon: <NotificationOutlined />, onClick: () => router.push('/speaking') },

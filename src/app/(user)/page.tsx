@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import StudyMain from "@/components/home/toeic.home";
 
 export default async function HomePage() {
   const session = await auth();
@@ -7,6 +8,6 @@ export default async function HomePage() {
     return <div>Not authenticated</div>;
   }
   return (
-    <h1>Welcome to Next.js!</h1>
+    <StudyMain/>
   )
 }

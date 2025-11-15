@@ -9,22 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ant-design/nextjs-registry": "^1.1.0",
-    "antd": "^5.27.4",
+    "@ant-design/nextjs-registry": "1.1.0",
+    "antd": "5.27.4",
     "next": "14.2.23",
-    "next-auth": "^5.0.0-beta.29",
-    "query-string": "^9.3.1",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-text-to-speech": "^4.0.0",
-    "swr": "^2.3.6"
+    "next-auth": "5.0.0-beta.29",
+    "query-string": "9.3.1",
+    "react": "18",
+    "react-dom": "18",
+    "react-text-to-speech": "4.0.0",
+    "swr": "2.3.6"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
+    "@types/node": "20",
+    "@types/react": "18",
+    "@types/react-dom": "18",
+    "eslint": "8",
     "eslint-config-next": "14.2.23",
-    "typescript": "^5"
+    "typescript": "5"
   }
 }
