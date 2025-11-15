@@ -44,6 +44,7 @@ declare global {
     age: number;
     address: string;
     phone: number;
+    learningPaths: boolean;
   }
 
   interface IRole {
@@ -188,11 +189,37 @@ declare global {
     part7: PartMistakeSummary;
   }
 
-  interface IGrammar{
+  interface IGrammar {
     _id: string;
     title: string;
     content: string;
   }
 
+  interface ILearningPath {
+    _id: string;
+    title: string;
+    description: string;
+    steps: [
+      {
+        _id: string;
+        title: string;
+        description: string;
+        order: number;
+        tasks: [
+          {
+            _id: string;
+            title: string;
+            description: string;
+            type: string;
+            content: any;
+            isLocked: boolean;
+            relatedStep: number
+          }
+        ]
+      }
+    ]
+    currentDay: number;
+    isCompleted: boolean;
+  }
 }
 
