@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import { Card, Typography, List, Radio, Button, message, Collapse } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { sendRequest } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const { Title, Paragraph, Text } = Typography;
 const { Panel } = Collapse;
@@ -42,11 +45,13 @@ const Part4Component = ({ taskData }: IProps) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string }>({});
   const [showAnswers, setShowAnswers] = useState(false);
 
+  const { data: session } = useSession();
+  const router = useRouter();
   const handleSelectAnswer = (questionId: string, value: string) => {
     setSelectedAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let correctCount = 0;
     taskData.content.forEach(item => {
       item.questions.forEach(q => {
@@ -56,6 +61,18 @@ const Part4Component = ({ taskData }: IProps) => {
     const totalQuestions = taskData.content.reduce((acc, item) => acc + item.questions.length, 0);
     message.success(`Bạn trả lời đúng ${correctCount} / ${totalQuestions} câu.`);
     setShowAnswers(true);
+
+    await sendRequest({
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/learning-task/${taskData._id}`,
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      nextOption: {
+        next: { tags: ['fetch-learning-path'] }
+      }
+    });
+    router.refresh();
   };
 
   return (

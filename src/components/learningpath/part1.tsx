@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useState } from "react";
-import { Card, Typography, List, Button, Radio, Image, message, Collapse } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { Card, Typography, List, Button, Radio, Image, message, Collapse, Row, Col } from "antd";
+import { CheckOutlined, CloseOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { sendRequest } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const { Title, Paragraph, Text } = Typography;
 const { Panel } = Collapse;
@@ -37,21 +40,49 @@ const Part1Component = ({ taskData }: IProps) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string }>({});
   const [showAnswers, setShowAnswers] = useState(false);
 
+  const { data: session } = useSession();
+  const router = useRouter();
+
   const handleSelectAnswer = (contentId: string, value: string) => {
     setSelectedAnswers(prev => ({ ...prev, [contentId]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let correctCount = 0;
     taskData.content.forEach(c => {
       if (selectedAnswers[c._id] === c.correctAnswer) correctCount++;
     });
     message.success(`Bạn trả lời đúng ${correctCount} / ${taskData.content.length} câu.`);
     setShowAnswers(true);
+
+    await sendRequest({
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/learning-task/${taskData._id}`,
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      nextOption: {
+        next: { tags: ['fetch-learning-path'] }
+      }
+    });
+    router.refresh();
   };
 
   return (
     <div style={{ padding: 24, background: "#f5f5f5" }}>
+      {/* Nút Quay về */}
+      <Row style={{ marginBottom: 16 }}>
+        <Col>
+          <Button
+            type="default"
+            icon={<ArrowLeftOutlined />}
+            onClick={() => router.back()}
+          >
+            Quay về
+          </Button>
+        </Col>
+      </Row>
+
       <Card style={{ marginBottom: 24 }}>
         <Title level={3}>{taskData.title}</Title>
         <Paragraph>{taskData.description}</Paragraph>
@@ -95,8 +126,8 @@ const Part1Component = ({ taskData }: IProps) => {
                   {item.options.map((opt, idx) => {
                     const label = String.fromCharCode(65 + idx);
                     return (
-                      <Radio key={idx} value={String.fromCharCode(65 + idx)} >
-                        {String.fromCharCode(65 + idx)}
+                      <Radio key={idx} value={label}>
+                        {label}
                       </Radio>
                     );
                   })}

@@ -25,7 +25,7 @@ export default async function HomePage() {
   const learningPath = res?.data ?? [];
 
 
-  return ( 
+  return (
     <StudyMain learningPaths={learningPath} />
   )
 }
