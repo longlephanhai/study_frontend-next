@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Card, List, Progress, Typography, Button, Row, Col, Space, Tag, Divider, message, Tooltip } from "antd";
 import { SoundOutlined, FileTextOutlined, BookOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 
 const { Title, Paragraph } = Typography;
 
@@ -35,6 +36,7 @@ interface IProps {
 
 export default function StudyMain({ learningPaths }: IProps) {
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+  const router = useRouter();
   if (!learningPaths || learningPaths.length === 0) {
     return <div>Chưa có lộ trình nào.</div>;
   }
@@ -73,6 +75,11 @@ export default function StudyMain({ learningPaths }: IProps) {
 
   const completed = selectedStep ? completedSteps.includes(selectedStep._id) : false;
 
+  const handleOnClickTask = (task: ITask) => {
+    console.log("Click task: ", task.type);
+    router.push(`/learningpath?task=${task._id}`);
+  }
+
   return (
     <div style={{ padding: "24px", background: "#fff", minHeight: "calc(100vh - 200px)" }}>
       <Card style={{ marginBottom: 24 }}>
@@ -85,7 +92,7 @@ export default function StudyMain({ learningPaths }: IProps) {
             const isLocked = step.order > learningPath.currentDay;
             const isCompleted = completedSteps.includes(step._id);
 
-            const buttonContent = isCompleted ? `Ngày ${step.order} ✅` : `Ngày ${step.order}`;
+            const buttonContent = isCompleted ? `Ngày ${step.order} ` : `Ngày ${step.order}`;
 
             return (
               <Col key={step._id} xs={8} sm={6} md={4} lg={3}>
@@ -112,7 +119,7 @@ export default function StudyMain({ learningPaths }: IProps) {
             <Row justify="space-between" align="middle">
               <Col>
                 <Title level={4}>
-                  Ngày {selectedStep.order} - {selectedStep.title}
+                  {selectedStep.title}
                 </Title>
                 <Paragraph type="secondary">{selectedStep.description}</Paragraph>
               </Col>
@@ -135,7 +142,7 @@ export default function StudyMain({ learningPaths }: IProps) {
               renderItem={(task) => (
                 <List.Item
                   actions={[
-                    <Button type="primary" size="small" disabled={task.isLocked}>
+                    <Button type="primary" size="small" disabled={task.isLocked} onClick={() => handleOnClickTask(task)}>
                       {task.isLocked ? "Khóa" : "Học ngay"}
                     </Button>
                   ]}

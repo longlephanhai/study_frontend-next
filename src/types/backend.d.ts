@@ -211,7 +211,7 @@ declare global {
             title: string;
             description: string;
             type: string;
-            content: any;
+            content: any[];
             isLocked: boolean;
             relatedStep: number
           }
@@ -220,6 +220,16 @@ declare global {
     ]
     currentDay: number;
     isCompleted: boolean;
+  }
+
+  interface ITask{
+    _id: string;
+    title: string;
+    description: string;
+    type: string;
+    content: any[];
+    isLocked: boolean;
+    relatedStep: number
   }
 }
 
