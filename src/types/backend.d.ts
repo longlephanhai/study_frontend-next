@@ -222,7 +222,7 @@ declare global {
     isCompleted: boolean;
   }
 
-  interface ITask{
+  interface ITask {
     _id: string;
     title: string;
     description: string;
@@ -231,5 +231,14 @@ declare global {
     isLocked: boolean;
     relatedStep: number
   }
+
+  interface IFlashCard {
+    _id: string;
+    userId: string;
+    title: string;
+    description: string;
+    vocabulariesFlashCardId: string[];
+  }
+
 }
 

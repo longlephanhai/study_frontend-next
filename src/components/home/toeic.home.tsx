@@ -72,9 +72,8 @@ export default function StudyMain({ learningPaths }: IProps) {
 
   const onComplete = async () => {
     if (!selectedStep) return;
-    if (!completedSteps.includes(selectedStep._id)) {
+    if (!completedSteps.includes(selectedStep._id) && selectedStep.tasks.every(t => t.isLocked) === true) {
       setCompletedSteps([...completedSteps, selectedStep._id]);
-
       await sendRequest({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/learning-path/${learningPath._id}`,
         method: "PATCH",
@@ -86,6 +85,8 @@ export default function StudyMain({ learningPaths }: IProps) {
         }
       });
       router.refresh();
+    } else {
+      message.warning("Vui lòng hoàn thành tất cả nhiệm vụ trước khi hoàn thành ngày học.");
     }
   };
 

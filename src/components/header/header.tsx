@@ -27,9 +27,10 @@ import {
   NotificationOutlined,
   BugOutlined,
   FileWordOutlined,
+  IdcardOutlined,
 } from "@ant-design/icons";
 import { useRouter } from 'next/navigation';
-import { on } from "events";
+
 
 const { Header: AntHeader } = Layout;
 const { Search } = Input;
@@ -54,6 +55,7 @@ export default function Header() {
         { key: "profile", label: "Hồ sơ", icon: <UserOutlined /> },
         { key: "writing-history", label: "Lịch sử bài viết", icon: <HistoryOutlined />, onClick: () => router.push('/writing/history') },
         { key: "test-history", label: "Lịch sử luyện đề", icon: <HistoryOutlined />, onClick: () => router.push('/test/history') },
+        { key: "flash-card", label: "Flashcard", icon: <IdcardOutlined />, onClick: () => router.push('/flashcard') },
         { key: "settings", label: "Cài đặt", icon: <SettingOutlined /> },
         { type: "divider" },
         { key: "logout", label: "Đăng xuất", icon: <LogoutOutlined /> },
