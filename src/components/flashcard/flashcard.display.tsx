@@ -1,9 +1,10 @@
 'use client';
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, Row, Col, Typography, Button } from "antd";
 import { BookOutlined, PlusOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+import FlashCardModal from "./flashcard.modal";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -14,12 +15,14 @@ interface IProps {
 const FlashcardComponent = ({ flashcards }: IProps) => {
   const router = useRouter();
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const handleClick = (id: string) => {
     router.push(`/flashcard/${id}`);
   };
 
   const handleCreate = () => {
-    // router.push("/flashcard/create");
+    setIsModalOpen(true);
   };
 
   return (
@@ -78,6 +81,8 @@ const FlashcardComponent = ({ flashcards }: IProps) => {
           </Col>
         ))}
       </Row>
+
+      <FlashCardModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </div>
   );
 };

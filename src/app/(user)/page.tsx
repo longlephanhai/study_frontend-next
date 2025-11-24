@@ -6,11 +6,18 @@ import { sendRequest } from "@/utils/api";
 export default async function HomePage() {
   const session = await auth();
 
+  if(!session){
+    return (
+      <div>Please login to continue.</div>
+    )
+  }
+
   if (session?.user.learningPaths === false) {
     return (
       <NoLearningPath />
     )
   }
+
   const res = await sendRequest<IBackendRes<ILearningPath[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/learning-path/by-user`,
     method: "GET",
