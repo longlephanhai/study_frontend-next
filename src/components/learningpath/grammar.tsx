@@ -13,8 +13,8 @@ const { Panel } = Collapse;
 interface IGrammar {
   _id: string;
   title: string;
-  content: string; // HTML
-  completed?: boolean; // trạng thái hoàn thành từ DB
+  content: string; 
+  completed?: boolean; 
 }
 
 interface ITask {
@@ -22,7 +22,7 @@ interface ITask {
   title: string;
   description?: string;
   content: IGrammar[];
-  completed?: boolean; // trạng thái task hoàn thành
+  completed?: boolean; 
 }
 
 interface IProps {

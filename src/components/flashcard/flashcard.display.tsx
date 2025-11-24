@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from "react";
-import { Card, Row, Col, Typography, Button } from "antd";
-import { BookOutlined, PlusOutlined } from "@ant-design/icons";
+import { Card, Row, Col, Typography, Button, Popconfirm, message, Divider } from "antd";
+import { BookOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import FlashCardModal from "./flashcard.modal";
 
@@ -10,11 +10,11 @@ const { Title, Paragraph, Text } = Typography;
 
 interface IProps {
   flashcards: IFlashCard[];
+
 }
 
 const FlashcardComponent = ({ flashcards }: IProps) => {
   const router = useRouter();
-
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleClick = (id: string) => {
@@ -23,6 +23,10 @@ const FlashcardComponent = ({ flashcards }: IProps) => {
 
   const handleCreate = () => {
     setIsModalOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+
   };
 
   return (
@@ -52,16 +56,33 @@ const FlashcardComponent = ({ flashcards }: IProps) => {
           <Col xs={24} sm={12} md={8} key={card._id}>
             <Card
               hoverable
-              onClick={() => handleClick(card._id)}
               style={{
                 borderRadius: 12,
                 minHeight: 170,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
+                position: "relative",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {/* Delete button */}
+              <Popconfirm
+                title="Bạn có chắc muốn xóa flashcard này?"
+                onConfirm={() => handleDelete(card._id)}
+                okText="Có"
+                cancelText="Không"
+              >
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  style={{ position: "absolute", top: 8, right: 8 }}
+                />
+              </Popconfirm>
+
+              <div
+                style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
+              >
                 <BookOutlined style={{ fontSize: 28, color: "#1677ff" }} />
                 <Title level={4} style={{ margin: 0 }}>
                   {card.title}
@@ -77,6 +98,13 @@ const FlashcardComponent = ({ flashcards }: IProps) => {
               <Text type="secondary">
                 {card.vocabulariesFlashCardId.length} từ vựng
               </Text>
+              <Divider />
+              <Button type="primary" onClick={() => handleClick(card._id)} style={{
+                marginTop: '8px',
+                width: '100%',
+              }}>
+                Bắt đầu học
+              </Button>
             </Card>
           </Col>
         ))}

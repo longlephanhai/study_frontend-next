@@ -100,7 +100,7 @@ const Part6Component = ({ taskData }: IProps) => {
                   const label = String.fromCharCode(65 + idx);
                   return (
                     <Radio key={idx} value={label}>
-                      {label}
+                      {label}. {opt}
                     </Radio>
                   );
                 })}

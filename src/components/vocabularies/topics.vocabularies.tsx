@@ -50,7 +50,7 @@ const TopicsVocabularies = ({ vocabularies }: IProps) => {
             }}
           >
             <Title level={3} style={{ margin: 0 }}>
-              📘 Danh sách từ vựng
+              Danh sách từ vựng
             </Title>
             <Button
               type="primary"

@@ -41,7 +41,7 @@ const AIReview = ({ params }: { params: { id: string } }) => {
   }, [params.id, session?.access_token, status]);
 
   const handleChange = (word: string, value: string) => {
-    if (submitted) return; // sau khi nộp rồi thì không được sửa
+    if (submitted) return; 
     setAnswers(prev => ({ ...prev, [word]: value }));
   };
 
@@ -118,7 +118,7 @@ const AIReview = ({ params }: { params: { id: string } }) => {
                     type={isCorrect ? "success" : "danger"}
                     style={{ marginTop: 8, fontWeight: 500 }}
                   >
-                    {isCorrect ? "✅ Correct" : `❌ Sai - Đáp án: ${item.fillBlank.answer}`}
+                    {isCorrect ? "Correct" : `Sai - Đáp án: ${item.fillBlank.answer}`}
                   </Text>
                 )}
               </Card>
