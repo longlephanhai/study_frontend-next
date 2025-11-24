@@ -237,7 +237,26 @@ declare global {
     userId: string;
     title: string;
     description: string;
-    vocabulariesFlashCardId: string[];
+    vocabulariesFlashCardId: IFlashCardVocabulary[];
+  }
+
+  interface IFlashCardVocabulary {
+    _id: string;
+    vocabulary: string;
+    meaning: string;
+    example: string;
+    pronunciation: string;
+    image: string;
+  }
+
+  interface IUploadFile {
+    statusCode: number;
+    message: string;
+    data: {
+      filename: string;
+      path: string;
+      url: string;
+    }
   }
 
 }
