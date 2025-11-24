@@ -1,8 +1,9 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { Card, Button, Image, Typography, Space, Progress, Tag, Tooltip, Row, Col } from "antd";
+import { Card, Button, Image, Typography, Progress, Tag, Tooltip, Row, Col } from "antd";
 import FlashCardVocabulariesModal from "./flashcard.vocabularies.modal";
 import { LeftOutlined, RightOutlined, RotateLeftOutlined, SoundOutlined, PlusOutlined } from "@ant-design/icons";
+import FlashCardVocabulariesModalUpdate from "./flashcard.vocabularies.modal.update";
 
 const { Title, Text } = Typography;
 
@@ -13,24 +14,13 @@ interface IProps {
 
 const DisplayVocabularies = ({ vocabularies, params }: IProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') prevCard();
-      if (e.key === 'ArrowRight') nextCard();
-      if (e.key === ' ' || e.key === 'Enter') toggleFlip();
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
 
   if (!vocabularies || vocabularies.length === 0) {
     return (
@@ -63,7 +53,7 @@ const DisplayVocabularies = ({ vocabularies, params }: IProps) => {
             type="primary"
             size="large"
             icon={<PlusOutlined />}
-            onClick={showModal}
+            onClick={() => setIsModalOpen(true)}
             style={{
               borderRadius: 8,
               padding: "0 24px",
@@ -73,6 +63,11 @@ const DisplayVocabularies = ({ vocabularies, params }: IProps) => {
             Tạo từ vựng mới
           </Button>
         </div>
+        <FlashCardVocabulariesModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          params={params}
+        />
       </div>
     );
   }
@@ -143,7 +138,7 @@ const DisplayVocabularies = ({ vocabularies, params }: IProps) => {
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            onClick={showModal}
+            onClick={() => setIsModalUpdateOpen(true)}
             style={{
               borderRadius: 8,
               padding: "0 20px",
@@ -153,7 +148,7 @@ const DisplayVocabularies = ({ vocabularies, params }: IProps) => {
               boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)"
             }}
           >
-            Thêm từ vựng
+            Cập nhật từ vựng
           </Button>
         </Col>
       </Row>
@@ -492,6 +487,13 @@ const DisplayVocabularies = ({ vocabularies, params }: IProps) => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         params={params}
+      />
+
+      <FlashCardVocabulariesModalUpdate
+        isModalUpdateOpen={isModalUpdateOpen}
+        setIsModalUpdateOpen={setIsModalUpdateOpen}
+        params={params}
+        vocabularies={vocabularies}
       />
     </div>
   );

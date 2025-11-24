@@ -4,30 +4,30 @@ import { sendRequest } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-
 interface IProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (open: boolean) => void;
+  isModalUpdateOpen: boolean;
+  setIsModalUpdateOpen: (open: boolean) => void;
   params?: { id: string };
+  vocabularies: IFlashCardVocabulary[];
 }
 
-const FlashCardVocabulariesModal = (props: IProps) => {
+const FlashCardVocabulariesModalUpdate = (props: IProps) => {
+  const { isModalUpdateOpen, setIsModalUpdateOpen, params, vocabularies } = props;
+  const [form] = Form.useForm();
 
   const { data: session } = useSession();
-
-  const { isModalOpen, setIsModalOpen, params } = props;
 
   const router = useRouter();
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalUpdateOpen(false);
     form.resetFields();
   };
-  const [form] = Form.useForm();
+
   const onFinish = async (values: any) => {
     const res = await sendRequest<IBackendRes<IFlashCardVocabulary>>({
       url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/flash-card/vocabularies/${params?.id}`,
-      method: "POST",
+      method: "PATCH",
       body: values.items,
       headers: {
         Authorization: `Bearer ${session?.access_token}`,
@@ -37,20 +37,21 @@ const FlashCardVocabulariesModal = (props: IProps) => {
       }
     })
     if (res && res.data) {
-      message.success(res.message || "Thêm từ vựng thành công!");
-      setIsModalOpen(false);
+      message.success(res.message || "Cập nhật từ vựng thành công!");
+      setIsModalUpdateOpen(false);
       form.resetFields();
       router.refresh();
     } else {
-      message.error(res.message || "Thêm từ vựng thất bại!");
+      message.error(res.message || "Cập nhật từ vựng thất bại!");
     }
   }
+
   return (
     <>
       <Modal
-        title="Flashcard Vocabularies"
+        title="Flashcard Update Vocabularies"
         closable={{ 'aria-label': 'Custom Close Button' }}
-        open={isModalOpen}
+        open={isModalUpdateOpen}
         onOk={() => form.submit()}
         onCancel={handleCancel}
         width={'80vw'}
@@ -60,7 +61,7 @@ const FlashCardVocabulariesModal = (props: IProps) => {
           form={form}
           name="dynamic_form_complex"
           autoComplete="off"
-          initialValues={{ items: [{}] }}
+          initialValues={{ items: [...vocabularies] }}
           layout="vertical"
           onFinish={onFinish}
         >
@@ -135,4 +136,4 @@ const FlashCardVocabulariesModal = (props: IProps) => {
     </>
   )
 }
-export default FlashCardVocabulariesModal;
+export default FlashCardVocabulariesModalUpdate;

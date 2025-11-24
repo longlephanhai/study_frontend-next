@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from "react";
-import { Card, Row, Col, Typography, Button, Popconfirm, message, Divider } from "antd";
+import { Card, Row, Col, Typography, Button, Popconfirm, Divider, message } from "antd";
 import { BookOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import FlashCardModal from "./flashcard.modal";
+import { sendRequest } from "@/utils/api";
+import { useSession } from "next-auth/react";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -17,6 +19,8 @@ const FlashcardComponent = ({ flashcards }: IProps) => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const { data: session } = useSession();
+
   const handleClick = (id: string) => {
     router.push(`/flashcard/${id}`);
   };
@@ -25,8 +29,23 @@ const FlashcardComponent = ({ flashcards }: IProps) => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-
+  const handleDelete = async (id: string) => {
+    const res = await sendRequest({
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/flash-card/${id}`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      nextOption: {
+        next: { tags: ['fetch-flashcard'] }
+      }
+    })
+    if (res) {
+      message.success("Xóa flashcard thành công");
+      router.refresh();
+    } else {
+      message.error("Xóa flashcard thất bại");
+    }
   };
 
   return (
@@ -65,7 +84,7 @@ const FlashcardComponent = ({ flashcards }: IProps) => {
                 position: "relative",
               }}
             >
-              {/* Delete button */}
+
               <Popconfirm
                 title="Bạn có chắc muốn xóa flashcard này?"
                 onConfirm={() => handleDelete(card._id)}
