@@ -22,6 +22,7 @@ import {
   ReadOutlined,
   EditOutlined,
   AimOutlined,
+  DashOutlined,
 } from "@ant-design/icons";
 
 const { Title, Text, Paragraph } = Typography;
@@ -79,29 +80,74 @@ const ExamResultsHistory = ({ examResultHistories }: IProps) => {
   const columns: ColumnsType<IExamResult> = [
     {
       title: "Mã bài test",
-      dataIndex: "_id",
-      key: "_id",
-      render: (id) => <Link href={`/test/${id}`}>{id}</Link>,
+      dataIndex: "testId",
+      key: "testId",
+      render: (testId) => <Link href={`/test/${testId}`}>{testId}</Link>,
     },
     {
       title: "Tổng điểm",
       dataIndex: "totalScore",
       key: "totalScore",
-      render: (score) => (
-        <Tag color={score >= 800 ? "green" : score >= 600 ? "blue" : "volcano"}>
-          {score}
-        </Tag>
-      ),
+      render: (_, record: IExamResult) => {
+        return (
+          (
+            record.parts.length !== 7 ?
+              <DashOutlined />
+              :
+              <Tag color={record.totalScore >= 800 ? "green" : record.totalScore >= 600 ? "blue" : "volcano"}>
+                {record.totalScore}
+              </Tag>
+          )
+        )
+      },
     },
     {
-      title: "Listening",
+      title: "Điểm phần nghe",
       dataIndex: "listeningScore",
       key: "listeningScore",
+      render: (_, record: IExamResult) => {
+        return (
+          (
+            record.parts.length !== 7 ?
+              <DashOutlined />
+              :
+              <Tag color={record.listeningScore >= 400 ? "green" : record.listeningScore >= 200 ? "blue" : "volcano"}>
+                {record.listeningScore}
+              </Tag>
+          )
+        )
+      },
     },
     {
-      title: "Reading",
+      title: "Điểm phần đọc",
       dataIndex: "readingScore",
       key: "readingScore",
+      render: (_, record: IExamResult) => {
+        return (
+          (
+            record.parts.length !== 7 ?
+              <DashOutlined />
+              :
+              <Tag color={record.readingScore >= 400 ? "green" : record.readingScore >= 200 ? "blue" : "volcano"}>
+                {record.readingScore}
+              </Tag>
+          )
+        )
+      },
+    },
+    {
+      title: "Các phần đã lầm",
+      dataIndex: "parts",
+      key: "parts",
+      render: (parts: IPart[]) => (
+        <>
+          {parts.map((part, index) => (
+            <Tag key={index} color="blue">
+              {part.partNo}
+            </Tag>
+          ))}
+        </>
+      ),
     },
     {
       title: "Ngày làm bài",
@@ -111,6 +157,16 @@ const ExamResultsHistory = ({ examResultHistories }: IProps) => {
         <Text type="secondary">{dayjs(date).format("DD/MM/YYYY HH:mm")}</Text>
       ),
     },
+    {
+      title: "Xem chi tiết",
+      dataIndex: "_id",
+      key: "detail",
+      render: (_id) => (
+        <Link href={`/test/history/${_id}`}>
+          <Button type="link">Chi tiết</Button>
+        </Link>
+      ),
+    }
   ];
 
   return (
