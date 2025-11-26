@@ -1,7 +1,10 @@
+'use client'
 import { Button, Card, Col, Row, Space, Tag } from "antd"
 import { FileSearchOutlined } from "@ant-design/icons"
+import { useParams, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 interface IProps {
-  result: IExamResult
+  result: IExamResult,
 }
 
 const groupByCategory = (answers: any[]) => {
@@ -46,13 +49,24 @@ const CategoryCard = ({
 const TestHistoryDetail = (props: IProps) => {
   const { result: data } = props;
 
+  const params = useParams();
+
+  const router = useRouter();
+
+  const [partIds, setPartIds] = useState<string | undefined>();
+
   // @ts-ignore
   const correctGrouped = groupByCategory(data?.correctAnswer || [])
   // @ts-ignore
   const wrongGrouped = groupByCategory(data?.wrongAnswer || [])
   // @ts-ignore
   const noAnswerGrouped = groupByCategory(data?.noAnswer || [])
-
+  useEffect(() => {
+    // @ts-ignore
+    const parts = data?.parts?.map((part) => part.partId).join(',');
+    setPartIds(parts);
+  }, [])
+  console.log('partIds', partIds);
   return (
     <>
       <Button
@@ -64,6 +78,7 @@ const TestHistoryDetail = (props: IProps) => {
           padding: "6px 14px",
           fontWeight: 500,
         }}
+        onClick={() => router.push(`answer/${params.id}?parts=${partIds}`)}
       >
         Xem chi tiết đáp án
       </Button>

@@ -106,9 +106,6 @@ export default function ExamPageClient({ partsData }: IProps) {
       }))
     }));
 
-    console.log({ totalCorrect, totalListeningCorrect, totalReadingCorrect, correctAnswer, wrongAnswer, noAnswer, parts });
-
-
     const data = {
       testId,
       totalCorrect,

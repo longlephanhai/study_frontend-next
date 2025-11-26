@@ -1,10 +1,9 @@
 'use client'
 
 import { RefObject, useState } from 'react';
-import { Card, Typography, Radio, Space, Statistic } from 'antd';
+import { Card, Typography, Radio, Space } from 'antd';
 
 const { Title } = Typography;
-const { Timer } = Statistic;
 
 interface IProps {
   part: IPart,
@@ -16,7 +15,6 @@ interface IProps {
 
 const Part1Component = ({ part, answers = {}, onAnswerChange, questionRefs, durationSec }: IProps) => {
   const [localAnswers, setLocalAnswers] = useState<Record<string, string>>(answers);
-  const deadline = Date.now() + (durationSec ? durationSec * 1000 : 0);
   const handleChange = (questionId: string, value: string) => {
     setLocalAnswers(prev => ({ ...prev, [questionId]: value }));
     onAnswerChange?.(questionId, value);
@@ -26,23 +24,6 @@ const Part1Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
     <div style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
       <h2>{part.name}</h2>
       <p>{part.description}</p>
-      {/* {durationSec && (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginBottom: 16
-        }}>
-          <div style={{
-            padding: '8px 16px',
-            borderRadius: '12px',
-            fontWeight: 'bold',
-            minWidth: 80,
-            textAlign: 'center'
-          }}>
-            <Timer type="countdown" value={deadline} />
-          </div>
-        </div>
-      )} */}
 
       {part.questions.map((q) => (
         <Card

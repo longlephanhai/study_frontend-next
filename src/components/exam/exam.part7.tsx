@@ -21,7 +21,7 @@ const Part7Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
     onAnswerChange?.(questionId, value);
   };
 
-  // 🧩 Nhóm các câu theo cùng đoạn reading (thường là cùng URL)
+  
   const grouped = part.questions.reduce<Record<string, any[]>>((acc, q) => {
     const key = q.reading?.[0] || 'no_reading';
     if (!acc[key]) acc[key] = [];
@@ -38,7 +38,7 @@ const Part7Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
 
       {Object.entries(grouped).map(([readingUrl, questions], idx) => (
         <div key={readingUrl} style={{ marginBottom: 48 }}>
-          {/* 🖼️ Đoạn văn hoặc hình ảnh đọc hiểu */}
+       
           {readingUrl !== 'no_reading' && (
             <Card
               style={{
@@ -62,7 +62,7 @@ const Part7Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
             </Card>
           )}
 
-          {/* 📝 Câu hỏi liên quan */}
+
           {questions.map((q) => (
             <Card
               key={q._id}
