@@ -65,6 +65,8 @@ const Part2Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
               ))}
             </Radio.Group>
 
+            
+
           </Space>
         </Card>
       ))}

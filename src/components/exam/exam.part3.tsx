@@ -1,7 +1,7 @@
 'use client'
 
 import { RefObject, useState } from 'react';
-import { Card, Radio, Space, Typography } from 'antd';
+import { Card, Radio, Typography } from 'antd';
 
 const { Title } = Typography;
 

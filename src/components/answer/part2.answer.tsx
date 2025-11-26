@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, Radio, Space, Typography } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 
@@ -61,6 +62,25 @@ const Part2Answer = ({ part, answerUser }: IProps) => {
                   );
                 })}
               </Radio.Group>
+
+              <div style={{ marginTop: 8 }}>
+                <strong>Your answer:</strong>{' '}
+                <span
+                  style={{
+                    padding: '2px 8px',
+                    borderRadius: 4,
+                    backgroundColor: userAnswer === correctAnswer ? '#e6fffb' : '#fff1f0',
+                    color: userAnswer === correctAnswer ? '#08979c' : '#cf1322',
+                    fontWeight: 500,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 4
+                  }}
+                >
+                  {userAnswer}
+                  {userAnswer === correctAnswer ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+                </span>
+              </div>
 
 
               {q.transcript && (

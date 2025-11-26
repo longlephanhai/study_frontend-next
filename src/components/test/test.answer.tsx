@@ -4,6 +4,7 @@ import { useState } from "react";
 import Part1Answer from "../answer/part1.answer";
 import Part2Answer from "../answer/part2.answer";
 import { Button } from "antd";
+import Part3Answer from "../answer/part3.answer";
 
 interface IProps {
   partsData: IPart[];
@@ -33,6 +34,14 @@ export default function TestAnswerComponent({ partsData, answerUser }: IProps) {
       {
         currentPart.partNo === 2 && (
           <Part2Answer
+            part={currentPart}
+            answerUser={answerUser}
+          />
+        )
+      }
+      {
+        currentPart.partNo === 3 && (
+          <Part3Answer
             part={currentPart}
             answerUser={answerUser}
           />
