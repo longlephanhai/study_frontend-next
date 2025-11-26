@@ -5,6 +5,7 @@ import Part1Answer from "../answer/part1.answer";
 import Part2Answer from "../answer/part2.answer";
 import { Button } from "antd";
 import Part3Answer from "../answer/part3.answer";
+import Part4Answer from "../answer/part4.answer";
 
 interface IProps {
   partsData: IPart[];
@@ -42,6 +43,14 @@ export default function TestAnswerComponent({ partsData, answerUser }: IProps) {
       {
         currentPart.partNo === 3 && (
           <Part3Answer
+            part={currentPart}
+            answerUser={answerUser}
+          />
+        )
+      }
+      {
+        currentPart.partNo === 4 && (
+          <Part4Answer
             part={currentPart}
             answerUser={answerUser}
           />

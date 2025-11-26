@@ -12,7 +12,7 @@ interface IProps {
 }
 
 const Part4Component = ({ part, answers = {}, onAnswerChange, questionRefs, durationSec }: IProps) => {
-  // Nhóm các câu hỏi theo audioUrl
+
   const groupedQuestions = Object.values(
     part.questions.reduce((acc: Record<string, IQuestion[]>, q) => {
       const key = q.audioUrl || "no-audio";

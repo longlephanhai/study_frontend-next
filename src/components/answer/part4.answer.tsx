@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { Card, Radio, Typography } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Card, Radio, Typography } from "antd";
 
 const { Title, Paragraph } = Typography;
 
@@ -11,13 +11,13 @@ interface IProps {
   answerUser: any;
 }
 
-const Part3Answer = ({ part, answerUser }: IProps) => {
+const Part4Answer = ({ part, answerUser }: IProps) => {
   const [answers, setAnswers] = useState<string[]>([]);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
 
   useEffect(() => {
     setAnswers(part.questions.map(q => q.correctAnswer));
-    setUserAnswers(answerUser?.parts[2]?.answers.map((a: any) => a.answer) || []);
+    setUserAnswers(answerUser?.parts[3]?.answers.map((a: any) => a.answer) || []);
   }, [part, answerUser]);
 
   const getOptionStyle = (letter: string, correctAnswer: string, userAnswer: string) => {
@@ -42,12 +42,11 @@ const Part3Answer = ({ part, answerUser }: IProps) => {
 
       {groupedQuestions.map((group, idx) => (
         <Card key={idx} style={{ borderRadius: 8, marginBottom: 24, border: '1px solid #eee', boxShadow: 'none', padding: 16 }}>
-
           {/* Audio chung */}
           {group[0].audioUrl && (
-            <audio controls style={{ width: '100%', marginBottom: 16 }}>
+            <audio controls style={{ width: "100%", marginBottom: 15 }}>
               <source src={group[0].audioUrl.trim()} type="audio/mpeg" />
-              Trình duyệt của bạn không hỗ trợ audio.
+              Trình duyệt của bạn không hỗ trợ thẻ audio.
             </audio>
           )}
 
@@ -58,25 +57,23 @@ const Part3Answer = ({ part, answerUser }: IProps) => {
             </div>
           )}
 
-          {group.map((q, index) => {
+          {group.map((q) => {
             const correctAnswer = answers[part.questions.indexOf(q)];
             const userAnswer = userAnswers[part.questions.indexOf(q)];
 
             return (
               <div key={q._id} style={{ marginBottom: 20, borderBottom: '1px dashed #ddd', paddingBottom: 16 }}>
-
-                {/* Image */}
+                {/* Hình ảnh */}
                 {q.imageUrl && (
-                  <div style={{ textAlign: 'center', marginBottom: 12 }}>
+                  <div style={{ textAlign: "center", marginBottom: 12 }}>
                     <img
                       src={q.imageUrl}
                       alt={`Question ${q.numberQuestion}`}
-                      style={{ maxWidth: '100%', maxHeight: 300, borderRadius: 8, objectFit: 'contain', border: '1px solid #eee' }}
+                      style={{ maxWidth: "100%", maxHeight: 300, borderRadius: 8, objectFit: "contain", border: "1px solid #eee" }}
                     />
                   </div>
                 )}
 
-                {/* Câu hỏi */}
                 <Title level={5} style={{ marginBottom: 4 }}>Câu {q.numberQuestion}</Title>
                 {q.questionContent && <Paragraph strong>{q.questionContent}</Paragraph>}
 
@@ -92,28 +89,32 @@ const Part3Answer = ({ part, answerUser }: IProps) => {
                   })}
                 </Radio.Group>
 
-                <div style={{ marginTop: 8 }}>
-                  <strong>Your answer:</strong>{' '}
-                  <span
-                    style={{
-                      padding: '2px 8px',
-                      borderRadius: 4,
-                      backgroundColor: userAnswer === correctAnswer ? '#e6fffb' : '#fff1f0',
-                      color: userAnswer === correctAnswer ? '#08979c' : '#cf1322',
-                      fontWeight: 500,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 4
-                    }}
-                  >
-                    {userAnswer}
-                    {userAnswer === correctAnswer ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
-                  </span>
-                </div>
+                {/* Your Answer */}
+                {userAnswer && (
+                  <div style={{ marginBottom: 8 }}>
+                    <strong>Your answer:</strong>{' '}
+                    <span
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: 4,
+                        backgroundColor: userAnswer === correctAnswer ? '#e6fffb' : '#fff1f0',
+                        color: userAnswer === correctAnswer ? '#08979c' : '#cf1322',
+                        fontWeight: 500,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4
+                      }}
+                    >
+                      {userAnswer}
+                      {userAnswer === correctAnswer ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+                    </span>
+                  </div>
+                )}
+
 
                 {/* Explanation */}
                 {q.explanation && (
-                  <div style={{ marginTop: 16 }}>
+                  <div style={{ marginTop: 12 }}>
                     <Title level={5}>Giải thích</Title>
                     <Paragraph>{q.explanation}</Paragraph>
                   </div>
@@ -128,4 +129,4 @@ const Part3Answer = ({ part, answerUser }: IProps) => {
   )
 }
 
-export default Part3Answer;
+export default Part4Answer;
