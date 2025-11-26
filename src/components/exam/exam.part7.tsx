@@ -21,7 +21,7 @@ const Part7Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
     onAnswerChange?.(questionId, value);
   };
 
-  
+
   const grouped = part.questions.reduce<Record<string, any[]>>((acc, q) => {
     const key = q.reading?.[0] || 'no_reading';
     if (!acc[key]) acc[key] = [];
@@ -38,8 +38,8 @@ const Part7Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
 
       {Object.entries(grouped).map(([readingUrl, questions], idx) => (
         <div key={readingUrl} style={{ marginBottom: 48 }}>
-       
-          {readingUrl !== 'no_reading' && (
+
+          {readingUrl !== 'no_reading' && questions[0].reading?.length > 0 && (
             <Card
               style={{
                 borderRadius: 12,
@@ -48,20 +48,22 @@ const Part7Component = ({ part, answers = {}, onAnswerChange, questionRefs, dura
                 marginBottom: 24,
                 padding: '20px 24px',
               }}
-              bodyStyle={{ textAlign: 'center' }}
             >
-              <img
-                src={readingUrl}
-                alt={`Reading passage ${idx + 1}`}
-                style={{
-                  maxWidth: '100%',
-                  borderRadius: 8,
-                  objectFit: 'contain',
-                }}
-              />
+              {questions[0].reading.map((imgUrl: string, rIdx: number) => (
+                <div key={rIdx} style={{ textAlign: 'center', marginBottom: rIdx < questions[0].reading.length - 1 ? 16 : 0 }}>
+                  <img
+                    src={imgUrl}
+                    alt={`Reading passage ${idx + 1} - ${rIdx + 1}`}
+                    style={{
+                      maxWidth: '100%',
+                      borderRadius: 8,
+                      objectFit: 'contain',
+                    }}
+                  />
+                </div>
+              ))}
             </Card>
           )}
-
 
           {questions.map((q) => (
             <Card

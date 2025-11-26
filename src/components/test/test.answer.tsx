@@ -8,6 +8,7 @@ import Part3Answer from "../answer/part3.answer";
 import Part4Answer from "../answer/part4.answer";
 import Part5Answer from "../answer/part5.answer";
 import Part6Answer from "../answer/part6.answer";
+import Part7Answer from "../answer/part7.answer";
 
 interface IProps {
   partsData: IPart[];
@@ -69,6 +70,14 @@ export default function TestAnswerComponent({ partsData, answerUser }: IProps) {
       {
         currentPart?.partNo === 6 && (
           <Part6Answer
+            part={currentPart}
+            answerUser={answerUser}
+          />
+        )
+      }
+      {
+        currentPart?.partNo === 7 && (
+          <Part7Answer
             part={currentPart}
             answerUser={answerUser}
           />
