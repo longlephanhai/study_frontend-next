@@ -1,10 +1,9 @@
 'use client'
 
 import { RefObject, useState } from 'react';
-import { Card, Radio, Space, Statistic, Typography } from 'antd';
+import { Card, Radio, Space, Typography } from 'antd';
 
 const { Title } = Typography;
-const { Timer } = Statistic;
 
 interface IProps {
   part: IPart,
