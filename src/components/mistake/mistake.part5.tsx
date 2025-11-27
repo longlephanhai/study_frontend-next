@@ -64,7 +64,7 @@ const Part5Mistake = () => {
     <div style={{ maxWidth: 800, margin: '0 auto', padding: 24 }}>
       <Card style={{ borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
         <Title level={3} style={{ textAlign: 'center', marginBottom: 24 }}>
-          Ôn tập Part 5 - Grammar Practice
+          Ôn tập Part 5 - Incomplete Sentences
         </Title>
 
         {!started ? (
