@@ -1,4 +1,4 @@
-import Part3Mistake from "@/components/mistake/mistake.parr3";
+import Part3Mistake from "@/components/mistake/mistake.part3";
 
 
 export default async function Part3MistakePage() {

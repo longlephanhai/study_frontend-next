@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
 
-const Part3Mistake = () => {
+const Part2Mistake = () => {
   const { data: session } = useSession();
 
   const [numQuestions, setNumQuestions] = useState<number>(5);
@@ -24,7 +24,7 @@ const Part3Mistake = () => {
   const fetchQuestions = async () => {
     try {
       const res = await sendRequest<IBackendRes<IQuestion[]>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/part5-mistakes/generate-part3-mistakes`,
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/part5-mistakes/generate-part2-mistakes`,
         method: 'POST',
         body: { numQuestions },
         headers: {
@@ -62,7 +62,7 @@ const Part3Mistake = () => {
     <div style={{ maxWidth: 800, margin: '0 auto', padding: 24 }}>
       <Card style={{ borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
         <Title level={3} style={{ textAlign: 'center', marginBottom: 24 }}>
-          Ôn tập Part 4 - Talks
+          Ôn tập Part 2 - Question & Response
         </Title>
 
         {!started ? (
@@ -99,7 +99,7 @@ const Part3Mistake = () => {
                   
                   <div style={{ marginBottom: 8 }}>
                     <Text strong style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontWeight: 600 }}>
-                      Câu {index + 1}: {q.questionContent}
+                      Câu {index + 1}
                     </Text>
                   </div>
 
@@ -115,7 +115,7 @@ const Part3Mistake = () => {
                     <Space direction="vertical" style={{ width: '100%' }}>
                       {q.options.map((opt, i) => (
                         <Radio key={i} value={String.fromCharCode(65 + i)}>
-                          {String.fromCharCode(65 + i)}. {opt}
+                          {String.fromCharCode(65 + i)}
                         </Radio>
                       ))}
                     </Space>
@@ -174,4 +174,4 @@ const Part3Mistake = () => {
   );
 };
 
-export default Part3Mistake;
+export default Part2Mistake;
