@@ -123,9 +123,9 @@ const Part7Mistake = () => {
                       src={img}
                       alt={`passage-${pIndex}-img-${i}`}
                       style={{
-                        width: '100%',       
-                        maxHeight: 350,     
-                        objectFit: 'contain', 
+                        width: '100%',
+                        maxHeight: 350,
+                        objectFit: 'contain',
                         borderRadius: 8,
                         boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
                       }}
