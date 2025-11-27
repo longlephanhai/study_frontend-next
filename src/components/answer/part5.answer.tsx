@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, Radio, Typography } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import ExplainableBlock from "../aihelper/ExplainBlock";
 
 const { Title, Paragraph } = Typography;
 
@@ -36,56 +37,58 @@ const Part5Answer = ({ part, answerUser }: IProps) => {
         const userAnswer = userAnswers[part.questions.indexOf(q)];
 
         return (
-          <Card
-            key={q._id}
-            style={{ borderRadius: 8, marginBottom: 20, border: "1px solid #eee", boxShadow: "none", padding: 16 }}
-          >
-            <Title level={5} style={{ margin: 0 }}>Câu {q.numberQuestion}</Title>
-            <Paragraph style={{ fontWeight: 500, marginBottom: 10 }}>{q.questionContent}</Paragraph>
+          <ExplainableBlock>
+            <Card
+              key={q._id}
+              style={{ borderRadius: 8, marginBottom: 20, border: "1px solid #eee", boxShadow: "none", padding: 16 }}
+            >
+              <Title level={5} style={{ margin: 0 }}>Câu {q.numberQuestion}</Title>
+              <Paragraph style={{ fontWeight: 500, marginBottom: 10 }}>{q.questionContent}</Paragraph>
 
-            {/* Options */}
-            <Radio.Group style={{ display: "flex", flexDirection: "column", gap: 8 }} value={correctAnswer}>
-              {q.options.map((opt, i) => {
-                const letter = String.fromCharCode(65 + i);
-                return (
-                  <div key={i} style={{ padding: 6, borderRadius: 6, ...getOptionStyle(letter, correctAnswer, userAnswer) }}>
-                    <Radio value={letter} disabled>{`${letter}. ${opt}`}</Radio>
-                  </div>
-                )
-              })}
-            </Radio.Group>
+              {/* Options */}
+              <Radio.Group style={{ display: "flex", flexDirection: "column", gap: 8 }} value={correctAnswer}>
+                {q.options.map((opt, i) => {
+                  const letter = String.fromCharCode(65 + i);
+                  return (
+                    <div key={i} style={{ padding: 6, borderRadius: 6, ...getOptionStyle(letter, correctAnswer, userAnswer) }}>
+                      <Radio value={letter} disabled>{`${letter}. ${opt}`}</Radio>
+                    </div>
+                  )
+                })}
+              </Radio.Group>
 
-            {/* Your Answer */}
-            {userAnswer && (
-              <div style={{ marginBottom: 8 }}>
-                <strong>Your answer:</strong>{' '}
-                <span
-                  style={{
-                    padding: '2px 8px',
-                    borderRadius: 4,
-                    backgroundColor: userAnswer === correctAnswer ? '#e6fffb' : '#fff1f0',
-                    color: userAnswer === correctAnswer ? '#08979c' : '#cf1322',
-                    fontWeight: 500,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 4
-                  }}
-                >
-                  {userAnswer}
-                  {userAnswer === correctAnswer ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
-                </span>
-              </div>
-            )}
+              {/* Your Answer */}
+              {userAnswer && (
+                <div style={{ marginBottom: 8 }}>
+                  <strong>Your answer:</strong>{' '}
+                  <span
+                    style={{
+                      padding: '2px 8px',
+                      borderRadius: 4,
+                      backgroundColor: userAnswer === correctAnswer ? '#e6fffb' : '#fff1f0',
+                      color: userAnswer === correctAnswer ? '#08979c' : '#cf1322',
+                      fontWeight: 500,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 4
+                    }}
+                  >
+                    {userAnswer}
+                    {userAnswer === correctAnswer ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+                  </span>
+                </div>
+              )}
 
-            {/* Explanation */}
-            {q.explanation && (
-              <div style={{ marginTop: 12 }}>
-                <Title level={5}>Giải thích</Title>
-                <Paragraph>{q.explanation}</Paragraph>
-              </div>
-            )}
+              {/* Explanation */}
+              {q.explanation && (
+                <div style={{ marginTop: 12 }}>
+                  <Title level={5}>Giải thích</Title>
+                  <Paragraph>{q.explanation}</Paragraph>
+                </div>
+              )}
 
-          </Card>
+            </Card>
+          </ExplainableBlock>
         )
       })}
     </div>

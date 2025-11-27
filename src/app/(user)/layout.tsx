@@ -4,6 +4,7 @@ import Footer from '@/components/footer/footer';
 import Header from '@/components/header/header';
 import React from 'react';
 import { Layout } from 'antd';
+import AIHelper from '@/components/aihelper/AIHelper';
 
 const { Content } = Layout;
 
@@ -20,6 +21,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
       >
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {children}
+          <AIHelper />
         </div>
       </Content>
       <Footer />

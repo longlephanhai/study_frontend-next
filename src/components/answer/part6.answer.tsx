@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Card, Divider, Radio, Typography } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import ExplainableBlock from "../aihelper/ExplainBlock";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -51,113 +52,119 @@ const Part6Answer = ({ part, answerUser }: IProps) => {
         const transcript = group[0]?.transcript || '';
 
         return (
-          <div key={groupIdx} style={{ marginBottom: 48 }}>
-            {/* Đoạn văn chung */}
-            <Card
-              style={{
-                borderRadius: 12,
-                background: '#f8fafc',
-                border: '1px solid #e5e7eb',
-                marginBottom: 24,
-                padding: '20px 24px',
-              }}
-            >
-              {sharedContent ? (
-                <div
-                  style={{
-                    whiteSpace: 'pre-line',
-                    textAlign: 'justify',
-                    fontSize: 16,
-                    lineHeight: 1.8,
-                  }}
-                  dangerouslySetInnerHTML={{ __html: highlightBlanks(sharedContent) }}
-                />
-              ) : (
-                <Paragraph type="secondary" italic>
-                  (Không có đoạn văn)
-                </Paragraph>
-              )}
-              {transcript && (
-                <div style={{ marginTop: 16 }}>
-                  <Title level={5}>Transcript</Title>
-                  <Paragraph>{transcript}</Paragraph>
-                </div>
-              )}
-            </Card>
+          <ExplainableBlock>
+            <div key={groupIdx} style={{ marginBottom: 48 }}>
+              {/* Đoạn văn chung */}
+              <Card
+                style={{
+                  borderRadius: 12,
+                  background: '#f8fafc',
+                  border: '1px solid #e5e7eb',
+                  marginBottom: 24,
+                  padding: '20px 24px',
+                }}
+              >
+                {sharedContent ? (
+                  // <div
+                  //   style={{
+                  //     whiteSpace: 'pre-line',
+                  //     textAlign: 'justify',
+                  //     fontSize: 16,
+                  //     lineHeight: 1.8,
+                  //   }}
+                  //   dangerouslySetInnerHTML={{ __html: highlightBlanks(sharedContent) }}
+                  <div style={{ marginTop: 16 }}>
+                    <Title level={5}>Transcript</Title>
+                    <Paragraph>{sharedContent}</Paragraph>
+                  </div>
+                  // />
+                ) : (
+                  <Paragraph type="secondary" italic>
+                    (Không có đoạn văn)
+                  </Paragraph>
+                )}
+                {transcript && (
+                  <div style={{ marginTop: 16 }}>
+                    <Title level={5}>Transcript</Title>
+                    <Paragraph>{transcript}</Paragraph>
+                  </div>
+                )}
+              </Card>
 
-            {/* Render các câu hỏi trong đoạn */}
-            {group.map((q, idx) => {
-              const correctAnswer = answers[part.questions.indexOf(q)];
-              const userAnswer = userAnswers[part.questions.indexOf(q)];
+              {/* Render các câu hỏi trong đoạn */}
+              {group.map((q, idx) => {
+                const correctAnswer = answers[part.questions.indexOf(q)];
+                const userAnswer = userAnswers[part.questions.indexOf(q)];
 
-              return (
-                <Card
-                  key={q._id}
-                  style={{
-                    borderRadius: 10,
-                    marginBottom: 20,
-                    border: '1px solid #e5e7eb',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                  }}
-                  bodyStyle={{ padding: '16px 20px' }}
-                >
-                  <Title level={5} style={{ marginBottom: 12 }}>
-                    Câu {q.numberQuestion}
-                  </Title>
+                return (
+                  <Card
+                    key={q._id}
+                    style={{
+                      borderRadius: 10,
+                      marginBottom: 20,
+                      border: '1px solid #e5e7eb',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                    }}
+                    bodyStyle={{ padding: '16px 20px' }}
+                  >
+                    <Title level={5} style={{ marginBottom: 12 }}>
+                      Câu {q.numberQuestion}
+                    </Title>
 
-                  <Radio.Group style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {q.options.map((opt, i) => {
-                      const letter = String.fromCharCode(65 + i);
-                      return (
-                        <div
-                          key={i}
-                          style={{ padding: 8, borderRadius: 6, ...getOptionStyle(letter, correctAnswer, userAnswer) }}
+                    <Radio.Group style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {q.options.map((opt, i) => {
+                        const letter = String.fromCharCode(65 + i);
+                        return (
+                          <div
+                            key={i}
+                            style={{ padding: 8, borderRadius: 6, ...getOptionStyle(letter, correctAnswer, userAnswer) }}
+                          >
+                            <Radio value={letter} disabled>
+                              <Text strong style={{ marginRight: 6 }}>{letter}.</Text>
+                              {opt}
+                            </Radio>
+                          </div>
+                        );
+                      })}
+                    </Radio.Group>
+
+                    {/* Your Answer */}
+                    {userAnswer && (
+                      <div style={{ marginTop: 8 }}>
+                        <strong>Your answer:</strong>{' '}
+                        <span
+                          style={{
+                            padding: '2px 8px',
+                            borderRadius: 4,
+                            backgroundColor: userAnswer === correctAnswer ? '#e6fffb' : '#fff1f0',
+                            color: userAnswer === correctAnswer ? '#08979c' : '#cf1322',
+                            fontWeight: 500,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 4
+                          }}
                         >
-                          <Radio value={letter} disabled>
-                            <Text strong style={{ marginRight: 6 }}>{letter}.</Text>
-                            {opt}
-                          </Radio>
-                        </div>
-                      );
-                    })}
-                  </Radio.Group>
+                          {userAnswer}
+                          {userAnswer === correctAnswer ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+                        </span>
+                      </div>
+                    )}
 
-                  {/* Your Answer */}
-                  {userAnswer && (
-                    <div style={{ marginTop: 8 }}>
-                      <strong>Your answer:</strong>{' '}
-                      <span
-                        style={{
-                          padding: '2px 8px',
-                          borderRadius: 4,
-                          backgroundColor: userAnswer === correctAnswer ? '#e6fffb' : '#fff1f0',
-                          color: userAnswer === correctAnswer ? '#08979c' : '#cf1322',
-                          fontWeight: 500,
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 4
-                        }}
-                      >
-                        {userAnswer}
-                        {userAnswer === correctAnswer ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
-                      </span>
-                    </div>
-                  )}
+                    {/* Explanation */}
+                    {q.explanation && (
+                      <div style={{ marginTop: 12 }}>
+                        <Title level={5}>Giải thích</Title>
+                        <Paragraph>{q.explanation}</Paragraph>
+                      </div>
+                    )}
 
-                  {/* Explanation */}
-                  {q.explanation && (
-                    <div style={{ marginTop: 12 }}>
-                      <Title level={5}>Giải thích</Title>
-                      <Paragraph>{q.explanation}</Paragraph>
-                    </div>
-                  )}
+                  </Card>
+                );
+              })}
 
-                </Card>
-              );
-            })}
-
-            <Divider />
-          </div>
+              <Divider />
+            </div>
+          </ExplainableBlock>
         );
       })}
     </div>
