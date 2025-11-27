@@ -9,9 +9,7 @@ import { useSession } from 'next-auth/react';
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
 
-
-
-const Part4Mistake = () => {
+const Part1Mistake = () => {
   const { data: session } = useSession();
 
   const [numQuestions, setNumQuestions] = useState<number>(5);
@@ -26,7 +24,7 @@ const Part4Mistake = () => {
   const fetchQuestions = async () => {
     try {
       const res = await sendRequest<IBackendRes<IQuestion[]>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/part5-mistakes/generate-part4-mistakes`,
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/part5-mistakes/generate-part1-mistakes`,
         method: 'POST',
         body: { numQuestions },
         headers: {
@@ -64,7 +62,7 @@ const Part4Mistake = () => {
     <div style={{ maxWidth: 800, margin: '0 auto', padding: 24 }}>
       <Card style={{ borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
         <Title level={3} style={{ textAlign: 'center', marginBottom: 24 }}>
-          Ôn tập Part 4 - Talks
+          Ôn tập Part 1 - Photographs
         </Title>
 
         {!started ? (
@@ -93,20 +91,22 @@ const Part4Mistake = () => {
               dataSource={selectedQuestions}
               renderItem={(q, index) => (
                 <Card key={index} style={{ marginBottom: 20, borderRadius: 10 }}>
-                  {
-                    q.imageUrl ? <img
-                      key={index}
-                      src={q.imageUrl}
-                      alt={`passage-${index}-img-${index}`}
-                      style={{
-                        width: '100%',
-                        maxHeight: 350,
-                        objectFit: 'contain',
-                        borderRadius: 8,
-                        boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
-                      }}
-                    /> : null
-                  }
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+                    {
+                      <img
+                        key={index}
+                        src={q.imageUrl}
+                        alt={`passage-${index}-img-${index}`}
+                        style={{
+                          width: '100%',
+                          maxHeight: 350,
+                          objectFit: 'contain',
+                          borderRadius: 8,
+                          boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
+                        }}
+                      />
+                    }
+                  </div>
                   {q.audioUrl && (
                     <div style={{ marginBottom: 12 }}>
                       <audio controls src={q.audioUrl} style={{ width: '100%' }} />
@@ -115,7 +115,7 @@ const Part4Mistake = () => {
 
                   <div style={{ marginBottom: 8 }}>
                     <Text strong style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontWeight: 600 }}>
-                      Câu {index + 1}: {q.questionContent}
+                      Câu {index + 1}
                     </Text>
                   </div>
 
@@ -131,7 +131,7 @@ const Part4Mistake = () => {
                     <Space direction="vertical" style={{ width: '100%' }}>
                       {q.options.map((opt, i) => (
                         <Radio key={i} value={String.fromCharCode(65 + i)}>
-                          {String.fromCharCode(65 + i)}. {opt}
+                          {String.fromCharCode(65 + i)}
                         </Radio>
                       ))}
                     </Space>
@@ -190,4 +190,4 @@ const Part4Mistake = () => {
   );
 };
 
-export default Part4Mistake;
+export default Part1Mistake;
