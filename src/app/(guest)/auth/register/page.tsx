@@ -3,10 +3,18 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Typography, Card, Upload, Divider, Space, message } from "antd";
 import { UploadOutlined, MailOutlined, LockOutlined, UserOutlined, PhoneOutlined, HomeOutlined, GoogleOutlined, GithubOutlined } from "@ant-design/icons";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 const { Title, Link } = Typography;
 
-export default function Register() {
+export default async function Register() {
+
+  const session = await auth();
+  if(session){
+    redirect('/')
+  }
+
   const [avatarFile, setAvatarFile] = useState<any>(null);
 
   const onFinish = (values: any) => {
@@ -20,7 +28,7 @@ export default function Register() {
     } else {
       setAvatarFile(file);
     }
-    return false; // prevent auto upload
+    return false;
   };
 
   const handleSocialSignup = (provider: string) => {

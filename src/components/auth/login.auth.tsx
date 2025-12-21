@@ -1,19 +1,27 @@
 "use client"
 
 import React from "react";
-import { Form, Input, Button, Typography, Card, Divider, Space } from "antd";
+import { Form, Input, Button, Typography, Card, Divider, Space, message } from "antd";
 import { LockOutlined, MailOutlined, GithubOutlined, GoogleOutlined } from "@ant-design/icons";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-const { Title, Text, Link } = Typography;
+const { Title, Link } = Typography;
 
 export default function LoginAuth() {
-  const onFinish = async (values: any) => {
+  const router = useRouter();
+
+  const onFinish = async (values: { email: string; password: string }) => {
     const result = await signIn("credentials", {
       email: values.email,
       password: values.password,
+      redirect: false,
     });
-    console.log(result);
+    if (result?.error) {
+      message.error("Đăng nhập thất bại vui lòng kiểm tra lại thông tin.");
+    } else {
+      router.push("/");
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
@@ -76,7 +84,6 @@ export default function LoginAuth() {
           </Form.Item>
         </Form>
 
-        {/* Hoặc đăng nhập bằng */}
         <Divider>Hoặc đăng nhập bằng</Divider>
 
         <Space style={{ width: "100%", justifyContent: "center" }} size="large">
