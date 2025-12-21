@@ -34,7 +34,7 @@ interface ILearningPath {
 }
 
 interface IProps {
-  learningPaths: ILearningPath[];
+  learningPaths: ILearningPath[]
 }
 
 export default function StudyMain({ learningPaths }: IProps) {
@@ -43,13 +43,9 @@ export default function StudyMain({ learningPaths }: IProps) {
 
   const { data: session } = useSession();
 
-  if (!learningPaths || learningPaths.length === 0) {
-    return <div>Chưa có lộ trình nào.</div>;
-  }
-
   const learningPath = learningPaths[0];
   const [selectedStep, setSelectedStep] = useState<ILearningStep | null>(
-    learningPath.steps.find(s => s.order === learningPath.currentDay) || null
+    learningPath?.steps.find(s => s.order === learningPath.currentDay) || null
   );
 
   const getTaskIcon = (type: string) => {

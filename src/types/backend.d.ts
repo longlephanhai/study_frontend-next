@@ -259,5 +259,23 @@ declare global {
     }
   }
 
+  interface ISurvey {
+    toeicHistory: string;
+    readingLevel: string;
+    listeningLevel: string;
+    vocabularyLevel: string;
+    targetScore: number;
+    focus: string;
+    purpose: string;
+    studyTimePerDay: string;
+    studyTimePerWeek: string;
+    examGoal: string;
+    learningStyle: string;
+    studyPreference: string;
+    mentorSupportType: string;
+    occupation: string;
+    preferredStudyTime: string;
+  }
+
 }
 

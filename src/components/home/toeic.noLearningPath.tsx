@@ -1,11 +1,13 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Card, Button, Typography, Space } from "antd";
 import { RocketOutlined } from "@ant-design/icons";
+import SurveyModal from "./survey.modal";
 
 const { Title, Paragraph } = Typography;
 
 const NoLearningPath = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div
       style={{
@@ -52,7 +54,7 @@ const NoLearningPath = () => {
             type="primary"
             size="large"
             icon={<RocketOutlined />}
-            onClick={() => console.log("Đăng ký lộ trình")}
+            onClick={() => setIsModalOpen(true)}
             block
             style={{
               borderRadius: 10,
@@ -75,6 +77,10 @@ const NoLearningPath = () => {
           100% { transform: translateY(0px); }
         }
       `}</style>
+      <SurveyModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </div>
   );
 };

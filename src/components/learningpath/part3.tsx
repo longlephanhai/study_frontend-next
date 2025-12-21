@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Typography, List, Radio, Button, message, Collapse } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { sendRequest } from "@/utils/api";
@@ -55,11 +55,11 @@ const Part3Component = ({ taskData }: IProps) => {
   const handleSubmit = async () => {
     let correctCount = 0;
     taskData.content.forEach(item => {
-      item.questions.forEach(q => {
+      item?.questions?.forEach(q => {
         if (selectedAnswers[q._id] === q.correctAnswer) correctCount++;
       });
     });
-    const totalQuestions = taskData.content.reduce((acc, item) => acc + item.questions.length, 0);
+    const totalQuestions = taskData.content.reduce((acc, item) => acc + item.questions?.length || 0, 0);
     message.success(`Bạn trả lời đúng ${correctCount} / ${totalQuestions} câu.`);
     setShowAnswers(true);
 
@@ -75,6 +75,8 @@ const Part3Component = ({ taskData }: IProps) => {
     });
     router.refresh();
   };
+
+
 
   return (
     <div style={{ padding: 24, background: "#f5f5f5" }}>
@@ -114,7 +116,7 @@ const Part3Component = ({ taskData }: IProps) => {
             )}
 
             {/* Questions */}
-            {item.questions.map((q, qIndex) => {
+            {item.questions?.map((q, qIndex) => {
               const userAnswer = selectedAnswers[q._id];
               const isCorrect = userAnswer === q.correctAnswer;
 

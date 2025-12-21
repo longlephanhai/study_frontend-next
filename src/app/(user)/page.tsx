@@ -6,15 +6,9 @@ import { sendRequest } from "@/utils/api";
 export default async function HomePage() {
   const session = await auth();
 
-  if(!session){
+  if (!session) {
     return (
       <div>Please login to continue.</div>
-    )
-  }
-
-  if (session?.user.learningPaths === false) {
-    return (
-      <NoLearningPath />
     )
   }
 
@@ -33,6 +27,6 @@ export default async function HomePage() {
 
 
   return (
-    <StudyMain learningPaths={learningPath} />
+    learningPath?.length === 0 ? <NoLearningPath /> : <StudyMain learningPaths={learningPath} />
   )
 }
