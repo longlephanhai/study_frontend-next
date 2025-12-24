@@ -3,30 +3,30 @@ import StudyMain from "@/components/home/toeic.home";
 import NoLearningPath from "@/components/home/toeic.noLearningPath";
 import { sendRequest } from "@/utils/api";
 
+
+export const revalidate = 0;
+
 export default async function HomePage() {
   const session = await auth();
 
   if (!session) {
-    return (
-      <div>Please login to continue.</div>
-    )
+    return <div>Please login to continue.</div>;
   }
 
   const res = await sendRequest<IBackendRes<ILearningPath[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/learning-path/by-user`,
     method: "GET",
     headers: {
-      Authorization: `Bearer ${session?.access_token}`,
+      Authorization: `Bearer ${session.access_token}`,
     },
     nextOption: {
-      next: { tags: ['fetch-learning-path'] }
-    }
-  })
+      next: { tags: ["fetch-learning-path"] },
+    },
+  });
 
   const learningPath = res?.data ?? [];
 
-
-  return (
-    learningPath?.length === 0 ? <NoLearningPath /> : <StudyMain learningPaths={learningPath} />
-  )
+  return learningPath.length === 0
+    ? <NoLearningPath />
+    : <StudyMain learningPaths={learningPath} />;
 }

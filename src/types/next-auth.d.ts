@@ -8,6 +8,7 @@ interface IUser {
     isVerify: boolean,
     type: string;
     role: string;
+    avatar?: string;
     learningPaths: boolean;
 }
 declare module "next-auth/jwt" {

@@ -17,12 +17,17 @@ export default function LoginAuth() {
       password: values.password,
       redirect: false,
     });
+
     if (result?.error) {
-      message.error("Đăng nhập thất bại vui lòng kiểm tra lại thông tin.");
+      message.error("Sai email hoặc mật khẩu");
+      return;
     } else {
+      message.success("Đăng nhập thành công");
       router.push("/");
+      router.refresh();
     }
   };
+
 
   const handleSocialLogin = (provider: string) => {
     signIn(provider);
