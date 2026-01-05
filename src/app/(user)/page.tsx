@@ -29,4 +29,5 @@ export default async function HomePage() {
   return learningPath.length === 0
     ? <NoLearningPath />
     : <StudyMain learningPaths={learningPath} />;
+  // : <NoLearningPath />
 }
