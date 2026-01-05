@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { Card, Typography, List, Radio, Button, message, Collapse } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import React, { useState, useMemo } from "react";
+import { Card, Typography, List, Radio, Button, message, Collapse, Space, Tag } from "antd";
+import { CheckOutlined, CloseOutlined, AudioOutlined, BookOutlined } from "@ant-design/icons";
 import { sendRequest } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -12,29 +12,23 @@ const { Panel } = Collapse;
 
 interface IQuestion {
   _id: string;
+  type: string;
+  audioUrl: string;
   options: string[];
   correctAnswer: string;
   explanation: string;
-  questionContent: string;
-}
-
-interface IPartThree {
-  _id: string;
-  imageUrl?: string;
-  audioUrl: string;
   category: string;
   transcript: string;
-  questions: IQuestion[];
+  questionContent: string;
+  imageUrl?: string;
 }
 
 interface ITask {
   _id: string;
   title: string;
   description?: string;
-  type: string;
-  content: IPartThree[];
+  content: IQuestion[];
   isLocked: boolean;
-  relatedStep: number;
 }
 
 interface IProps {
@@ -44,9 +38,17 @@ interface IProps {
 const Part3Component = ({ taskData }: IProps) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string }>({});
   const [showAnswers, setShowAnswers] = useState(false);
-
   const { data: session } = useSession();
   const router = useRouter();
+
+  const groupedQuestions = useMemo(() => {
+    const groups: { [key: string]: IQuestion[] } = {};
+    taskData.content.forEach((q) => {
+      if (!groups[q.audioUrl]) groups[q.audioUrl] = [];
+      groups[q.audioUrl].push(q);
+    });
+    return Object.values(groups);
+  }, [taskData.content]);
 
   const handleSelectAnswer = (questionId: string, value: string) => {
     setSelectedAnswers(prev => ({ ...prev, [questionId]: value }));
@@ -54,127 +56,151 @@ const Part3Component = ({ taskData }: IProps) => {
 
   const handleSubmit = async () => {
     let correctCount = 0;
-    taskData.content.forEach(item => {
-      item?.questions?.forEach(q => {
-        if (selectedAnswers[q._id] === q.correctAnswer) correctCount++;
-      });
+    taskData.content.forEach(q => {
+      if (selectedAnswers[q._id] === q.correctAnswer) correctCount++;
     });
-    const totalQuestions = taskData.content.reduce((acc, item) => acc + item.questions?.length || 0, 0);
-    message.success(`Bạn trả lời đúng ${correctCount} / ${totalQuestions} câu.`);
+
+    message.success(`Bạn trả lời đúng ${correctCount} / ${taskData.content.length} câu.`);
     setShowAnswers(true);
 
-    await sendRequest({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/learning-task/${taskData._id}`,
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${session?.access_token}`,
-      },
-      nextOption: {
-        next: { tags: ['fetch-learning-path'] }
-      }
-    });
-    router.refresh();
+    try {
+      await sendRequest({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/learning-task/${taskData._id}`,
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      router.refresh();
+    } catch (error) {
+      console.error("Lỗi khi cập nhật tiến độ:", error);
+    }
   };
 
-
-
   return (
-    <div style={{ padding: 24, background: "#f5f5f5" }}>
-      <Card style={{ marginBottom: 24 }}>
-        <Title level={3}>{taskData.title}</Title>
-        {taskData.description && <Paragraph>{taskData.description}</Paragraph>}
+    // Tăng maxWidth từ 800 lên 1000px để giao diện rộng rãi hơn
+    <div style={{ padding: "40px 20px", maxWidth: 1000, margin: "0 auto", backgroundColor: "#fafafa", minHeight: "100vh" }}>
+      
+      <Card style={{ marginBottom: 32, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}>
+        <Title level={2} style={{ marginBottom: 16 }}>{taskData.title}</Title>
+        <Paragraph style={{ fontSize: 16, color: "#595959" }}>{taskData.description}</Paragraph>
       </Card>
 
-      <List
-        dataSource={taskData.content}
-        renderItem={(item, index) => (
-          <Card
-            key={item._id}
-            style={{ marginBottom: 16 }}
-            type="inner"
-            title={`Đoạn ${index + 1} - ${item.category}`}
-          >
-            {/* Image */}
-            {item.imageUrl && (
-              <div style={{ textAlign: "center", marginBottom: 12 }}>
-                <img src={item.imageUrl} alt={`Image ${index + 1}`} style={{ maxHeight: 200 }} />
-              </div>
-            )}
+      {groupedQuestions.map((group, groupIdx) => (
+        <Card 
+          key={groupIdx} 
+          style={{ marginBottom: 32, borderRadius: 12, border: "1px solid #e8e8e8" }}
+          title={
+            <Space size="middle" style={{ fontSize: 18 }}>
+              <AudioOutlined style={{ color: "#1890ff" }} />
+              <span>Đoạn hội thoại {groupIdx + 1}</span>
+              <Tag color="blue">{group[0].category}</Tag>
+            </Space>
+          }
+        >
+          {/* Audio Player to hơn */}
+          <div style={{ marginBottom: 24, background: "#f0f5ff", padding: "24px", borderRadius: 12 }}>
+            <audio controls src={group[0].audioUrl} style={{ width: "100%", height: "54px" }} />
+          </div>
 
-            {/* Audio */}
-            <div style={{ marginBottom: 12 }}>
-              <audio controls src={item.audioUrl} style={{ width: "100%" }} />
-            </div>
+          {showAnswers && (
+            <Collapse ghost style={{ marginBottom: 24 }}>
+              <Panel 
+                header={<Space><BookOutlined /><Text strong style={{ fontSize: 16 }}>Xem Transcript & Dịch nghĩa</Text></Space>} 
+                key="1"
+                style={{ background: "#fffbe6", borderRadius: 8, marginBottom: 16 }}
+              >
+                <div style={{ whiteSpace: 'pre-wrap', fontSize: 15, lineHeight: "1.8", padding: "10px" }}>
+                  {group[0].transcript}
+                </div>
+              </Panel>
+            </Collapse>
+          )}
 
-            {/* Transcript */}
-            {showAnswers && (
-              <Collapse style={{ marginBottom: 12 }}>
-                <Panel header="Transcript" key="transcript">
-                  <Text>{item.transcript}</Text>
-                </Panel>
-              </Collapse>
-            )}
+          {group.map((q, qIdx) => {
+            const userAnswer = selectedAnswers[q._id];
+            const isCorrect = userAnswer === q.correctAnswer;
 
-            {/* Questions */}
-            {item.questions?.map((q, qIndex) => {
-              const userAnswer = selectedAnswers[q._id];
-              const isCorrect = userAnswer === q.correctAnswer;
+            return (
+              <div key={q._id} style={{ marginBottom: 40, padding: "0 10px" }}>
+                {/* Câu hỏi to hơn */}
+                <div style={{ marginBottom: 16 }}>
+                  <Text strong style={{ fontSize: 18, display: "block" }}>
+                    {qIdx + 1}. {q.questionContent}
+                  </Text>
+                </div>
 
-              return (
-                <Card
-                  key={q._id}
-                  type="inner"
-                  title={`Câu hỏi ${qIndex + 1}`}
-                  style={{ marginBottom: 12 }}
+                <Radio.Group
+                  onChange={(e) => handleSelectAnswer(q._id, e.target.value)}
+                  value={userAnswer}
+                  disabled={showAnswers}
+                  style={{ display: "flex", flexDirection: "column", gap: 12 }}
                 >
-                  <Paragraph>{q.questionContent}</Paragraph>
+                  {q.options.map((opt, idx) => {
+                    const label = String.fromCharCode(65 + idx);
+                    let bgColor = "transparent";
+                    let borderColor = "#d9d9d9";
 
-                  <Radio.Group
-                    onChange={(e) => handleSelectAnswer(q._id, e.target.value)}
-                    value={selectedAnswers[q._id]}
-                    style={{ display: "flex", flexDirection: "column", marginBottom: 12 }}
-                    disabled={showAnswers}
-                  >
-                    {q.options.map((opt, idx) => {
-                      const label = String.fromCharCode(65 + idx);
-                      return (
-                        <Radio key={idx} value={label}>
-                          {label}. {opt}
-                        </Radio>
-                      );
-                    })}
-                  </Radio.Group>
+                    if (showAnswers) {
+                      if (label === q.correctAnswer) {
+                        bgColor = "#f6ffed";
+                        borderColor = "#52c41a";
+                      } else if (userAnswer === label && !isCorrect) {
+                        bgColor = "#fff1f0";
+                        borderColor = "#ff4d4f";
+                      }
+                    }
 
-                  {/* Explanation & Correct Answer */}
-                  {showAnswers && (
-                    <div>
-                      <Text strong>Đáp án: {q.correctAnswer}</Text>
-                      {q.explanation && (
-                        <>
-                          <br />
-                          <Text>{q.explanation}</Text>
-                        </>
-                      )}
-                      {userAnswer && (
-                        <>
-                          <br />
-                          <Text type={isCorrect ? "success" : "danger"}>
-                            Bạn chọn: {userAnswer} {isCorrect ? <CheckOutlined /> : <CloseOutlined />}
-                          </Text>
-                        </>
-                      )}
+                    return (
+                      <Radio 
+                        key={idx} 
+                        value={label}
+                        className="custom-radio-large"
+                        style={{ 
+                          padding: "12px 20px",
+                          borderRadius: "8px",
+                          border: `1px solid ${borderColor}`,
+                          backgroundColor: bgColor,
+                          fontSize: 16, // Chữ của option to hơn
+                          transition: "all 0.3s"
+                        }}
+                      >
+                        <Text style={{ fontSize: 16 }}>
+                          <span style={{ fontWeight: "bold", marginRight: 8 }}>{label}.</span> {opt}
+                        </Text>
+                      </Radio>
+                    );
+                  })}
+                </Radio.Group>
+
+                {showAnswers && (
+                  <div style={{ marginTop: 20, padding: "20px", background: "#f9f9f9", borderRadius: 8, borderLeft: "4px solid #1890ff" }}>
+                    <Text strong style={{ fontSize: 16, color: "#1890ff" }}>Giải thích đáp án:</Text>
+                    <div style={{ whiteSpace: 'pre-wrap', marginTop: 10, fontSize: 15, color: "#434343" }}>
+                      {q.explanation}
                     </div>
-                  )}
-                </Card>
-              );
-            })}
-          </Card>
-        )}
-      />
+                  </div>
+                )}
+                {qIdx < group.length - 1 && <div style={{ height: 1, background: "#f0f0f0", margin: "40px 0" }} />}
+              </div>
+            );
+          })}
+        </Card>
+      ))}
 
-      <div style={{ textAlign: "center", marginTop: 24 }}>
-        <Button type="primary" size="large" onClick={handleSubmit} disabled={showAnswers}>
-          Nộp bài
+      <div style={{ textAlign: "center", marginTop: 40, paddingBottom: 60 }}>
+        <Button 
+          type="primary" 
+          size="large" 
+          onClick={handleSubmit} 
+          disabled={showAnswers}
+          style={{ 
+            height: "56px", 
+            padding: "0 60px", 
+            fontSize: "18px", 
+            borderRadius: "28px",
+            boxShadow: "0 4px 14px rgba(24, 144, 255, 0.4)" 
+          }}
+        >
+          Nộp bài hoàn tất
         </Button>
       </div>
     </div>
