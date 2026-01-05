@@ -4,14 +4,14 @@ import {
   message,
   Modal,
   Select,
-  Radio,
-  Checkbox,
   Divider,
   Row,
   Col,
+  Button,
 } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const { Option } = Select;
 
@@ -24,41 +24,60 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
   const [form] = Form.useForm();
   const { data: session } = useSession();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (values: any) => {
-    const res = await sendRequest<any>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/surveys`,
-      method: "POST",
-      body: values,
-      headers: {
-        Authorization: `Bearer ${session?.access_token}`,
-      },
-      nextOption: { next: { tags: ["fetch-survey"] } },
-    });
+    try {
+      setLoading(true);
+      const res = await sendRequest<any>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/surveys`,
+        method: "POST",
+        body: values,
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+        nextOption: { next: { tags: ["fetch-survey"] } },
+      });
 
-    if (res?.data) {
-      message.success("Survey submitted successfully!");
-      setIsModalOpen(false);
-      form.resetFields();
-      router.refresh();
-    } else {
-      message.error(res?.error || "Submission failed");
+      if (res?.data) {
+        message.success("Survey submitted successfully!");
+        setIsModalOpen(false);
+        form.resetFields();
+        router.refresh();
+      } else {
+        message.error(res?.error || "Submission failed");
+      }
+    } catch (error: any) {
+      message.error(error?.message || "Submission failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Modal
-      title="📘 TOEIC Learning Path Survey"
+      title="TOEIC Learning Path Survey"
       open={isModalOpen}
-      onOk={() => form.submit()}
       onCancel={() => setIsModalOpen(false)}
-      okText="Submit"
+      footer={[
+        <Button key="cancel" onClick={() => setIsModalOpen(false)}>
+          Cancel
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          onClick={() => form.submit()}
+          loading={loading} // đây là nút sẽ hiển thị "loading"
+        >
+          {loading ? "AI đang tạo..." : "Submit"}
+        </Button>,
+      ]}
       width="70vw"
       maskClosable={false}
     >
       <Form layout="vertical" form={form} onFinish={handleSubmit}>
-        {/* ===== Section 1 ===== */}
-        <Divider orientation="left">1️⃣ Current Level</Divider>
+        {/* Current Level */}
+        <Divider orientation="left">Current Level</Divider>
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item name="toeicHistory" label="Toeic History" required>
@@ -71,19 +90,17 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={12}>
             <Form.Item name="targetScore" label="Target Score" required>
               <Select placeholder="Select target score">
-                <Option value={450}>450+</Option>
-                <Option value={600}>600+</Option>
-                <Option value={700}>700+</Option>
-                <Option value={750}>750</Option>
-                <Option value={800}>800+</Option>
+                <Option value="450">450+</Option>
+                <Option value="600">600+</Option>
+                <Option value="700">700+</Option>
+                <Option value="750">750</Option>
+                <Option value="800">800+</Option>
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={8}>
             <Form.Item name="readingLevel" label="Reading Level" required>
               <Select placeholder="Select reading level">
@@ -93,7 +110,6 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={8}>
             <Form.Item name="listeningLevel" label="Listening Level" required>
               <Select placeholder="Select listening level">
@@ -103,7 +119,6 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={8}>
             <Form.Item name="vocabularyLevel" label="Vocabulary Level" required>
               <Select placeholder="Select vocabulary level">
@@ -115,8 +130,8 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
           </Col>
         </Row>
 
-        {/* ===== Section 2 ===== */}
-        <Divider orientation="left">2️⃣ Goals & Study Time</Divider>
+        {/* Goals & Study Time */}
+        <Divider orientation="left">Goals & Study Time</Divider>
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item name="studyTimePerDay" label="Study Time Per Day" required>
@@ -128,7 +143,6 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={12}>
             <Form.Item name="studyTimePerWeek" label="Study Time Per Week" required>
               <Select placeholder="Select study time per week">
@@ -140,20 +154,18 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
-          <Col span={24}>
+          <Col span={12}>
             <Form.Item name="focus" label="Focus" required>
-              <Checkbox.Group>
-                <Checkbox value="Listening">Listening</Checkbox>
-                <Checkbox value="Reading">Reading</Checkbox>
-                <Checkbox value="Vocabulary">Vocabulary</Checkbox>
-                <Checkbox value="Grammar">Grammar</Checkbox>
-                <Checkbox value="Test Strategy">Test Strategy</Checkbox>
-              </Checkbox.Group>
+              <Select placeholder="Select focus">
+                <Option value="Listening">Listening</Option>
+                <Option value="Reading">Reading</Option>
+                <Option value="Vocabulary">Vocabulary</Option>
+                <Option value="Grammar">Grammar</Option>
+                <Option value="Test Strategy">Test Strategy</Option>
+              </Select>
             </Form.Item>
           </Col>
-
-          <Col span={24}>
+          <Col span={12}>
             <Form.Item name="examGoal" label="Exam Goal" required>
               <Select placeholder="Select exam goal">
                 <Option value="1 tháng">1 tháng</Option>
@@ -164,8 +176,8 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
           </Col>
         </Row>
 
-        {/* ===== Section 3 ===== */}
-        <Divider orientation="left">3️⃣ Learning Style & Personal Info</Divider>
+        {/* Learning Style & Personal Info */}
+        <Divider orientation="left">Learning Style & Personal Info</Divider>
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item name="learningStyle" label="Learning Style" required>
@@ -178,18 +190,16 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={12}>
             <Form.Item name="preferredStudyTime" label="Preferred Study Time" required>
-              <Radio.Group>
-                <Radio value="Morning">Morning</Radio>
-                <Radio value="Afternoon">Afternoon</Radio>
-                <Radio value="Evening">Evening</Radio>
-                <Radio value="Tối">Tối</Radio>
-              </Radio.Group>
+              <Select placeholder="Select preferred study time">
+                <Option value="Morning">Morning</Option>
+                <Option value="Afternoon">Afternoon</Option>
+                <Option value="Evening">Evening</Option>
+                <Option value="Tối">Tối</Option>
+              </Select>
             </Form.Item>
           </Col>
-
           <Col span={12}>
             <Form.Item name="studyPreference" label="Study Preference" required>
               <Select placeholder="Select study preference">
@@ -200,7 +210,6 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={12}>
             <Form.Item name="mentorSupportType" label="Mentor Support Type" required>
               <Select placeholder="Select mentor support type">
@@ -211,7 +220,6 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
           <Col span={12}>
             <Form.Item name="occupation" label="Occupation" required>
               <Select placeholder="Select occupation">
@@ -224,8 +232,7 @@ const SurveyModal = ({ isModalOpen, setIsModalOpen }: IProps) => {
               </Select>
             </Form.Item>
           </Col>
-
-          <Col span={24}>
+          <Col span={12}>
             <Form.Item name="purpose" label="Purpose" required>
               <Select placeholder="Select purpose">
                 <Option value="Graduate">Graduate</Option>
